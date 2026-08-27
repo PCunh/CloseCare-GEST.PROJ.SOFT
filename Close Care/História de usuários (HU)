@@ -4,3 +4,160 @@ Como quem?
 Quero fazer o quê?
 3. POR QUÊ?
 Para obter qual valor?
+
+HU01 – Agendar consulta
+Como paciente, quero agendar uma consulta conforme minhas necessidades para receber atendimento no horário mais adequado.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Agendamento realizado
+Dado que existem horários disponíveis
+Quando selecionar um horário e confirmar o agendamento
+Então a consulta deve ser registrada
+E o horário deve ficar indisponível para outros pacientes.
+
+Cenário 2 – Horário indisponível
+Dado que o horário foi ocupado
+Quando tentar agendá-lo
+Então o sistema deve impedir o agendamento
+E solicitar a escolha de outro horário.
+
+HU02 – Agendar exame
+Como paciente, quero agendar um exame para realizá-lo em uma data conveniente.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Exame agendado
+Dado que existe disponibilidade
+Quando confirmar o agendamento
+Então o exame deve ser registrado.
+
+Cenário 2 – Sem disponibilidade
+Dado que não há horários disponíveis
+Quando tentar agendar
+Então o sistema deve informar a indisponibilidade.
+
+HU03 – Solicitar consulta
+Como profissional de saúde, quero solicitar uma consulta para um paciente para garantir a continuidade do tratamento.
+Prioridade: Should Have
+Critérios de Aceite
+Cenário 1 – Solicitação criada
+Dado que selecionei um paciente
+Quando solicitar uma consulta
+Então o pedido deve ser registrado.
+
+Cenário 2 – Paciente inválido
+Dado que o paciente não está cadastrado
+Quando tentar solicitar
+Então o sistema deve impedir a operação.
+
+HU04 – Solicitar exame
+Como profissional de saúde, quero solicitar um exame para um paciente para apoiar o diagnóstico.
+Prioridade: Should Have
+Critérios de Aceite
+Cenário 1 – Exame solicitado
+Dado que o paciente está cadastrado
+Quando solicitar um exame
+Então a solicitação deve ser registrada.
+
+Cenário 2 – Dados incompletos
+Dado que informações obrigatórias não foram preenchidas
+Quando enviar a solicitação
+Então o sistema deve impedir o envio.
+
+HU05 – Listar consultas
+Como paciente ou profissional, quero visualizar as consultas cadastradas para acompanhar os atendimentos.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Lista exibida
+Dado que existem consultas cadastradas
+Quando acessar a lista
+Então todas as consultas devem ser exibidas em ordem cronológica.
+
+Cenário 2 – Nenhuma consulta
+Dado que não existem consultas
+Quando acessar a lista
+Então o sistema deve informar que não há consultas cadastradas.
+
+HU06 – Listar exames
+Como paciente ou profissional, quero visualizar os exames cadastrados para acompanhar as solicitações e agendamentos.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Exames exibidos
+Dado que existem exames registrados
+Quando acessar a lista
+Então todos os exames devem ser exibidos.
+
+Cenário 2 – Nenhum exame
+Dado que não existem exames
+Quando acessar a lista
+Então o sistema deve informar que não há exames registrados.
+
+HU07 – Remarcar consulta
+Como paciente ou profissional, quero remarcar uma consulta para adequar o atendimento à disponibilidade.
+Prioridade: Should Have
+Critérios de Aceite
+Cenário 1 – Remarcação concluída
+Dado que a consulta existe
+Quando escolher um novo horário disponível
+Então a consulta deve ser atualizada.
+
+Cenário 2 – Novo horário indisponível
+Dado que o novo horário está ocupado
+Quando tentar confirmar
+Então o sistema deve impedir a remarcação.
+
+HU08 – Remarcar exame
+Como paciente ou profissional, quero remarcar um exame para ajustar sua realização.
+Prioridade: Should Have
+Critérios de Aceite
+Cenário 1 – Exame remarcado
+Dado que o exame existe
+Quando selecionar um novo horário disponível
+Então o sistema deve atualizar o agendamento.
+
+Cenário 2 – Horário inválido
+Dado que o horário não está disponível
+Quando tentar remarcar
+Então o sistema deve impedir a alteração.
+
+HU09 – Cancelar consulta
+Como paciente ou profissional, quero cancelar uma consulta para liberar o horário quando não puder comparecer.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Cancelamento realizado
+Dado que a consulta está agendada
+Quando confirmar o cancelamento
+Então a consulta deve ser cancelada
+E o horário deve voltar a ficar disponível.
+
+Cenário 2 – Consulta inexistente
+Dado que a consulta não existe
+Quando tentar cancelar
+Então o sistema deve exibir uma mensagem de erro.
+
+HU10 – Cancelar exame
+Como paciente ou profissional, quero cancelar um exame para liberar o horário reservado.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Exame cancelado
+Dado que o exame está agendado
+Quando confirmar o cancelamento
+Então o exame deve ser cancelado.
+
+Cenário 2 – Exame inexistente
+Dado que o exame não existe
+Quando tentar cancelar
+Então o sistema deve impedir a operação.
+
+HU11 – Disponibilizar agenda
+Como profissional de saúde, quero definir datas e horários disponíveis para que pacientes possam realizar agendamentos.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Agenda publicada
+Dado que estou autenticado como profissional
+Quando cadastrar datas e horários disponíveis
+Então eles devem ficar visíveis para os pacientes.
+
+Cenário 2 – Horário duplicado
+Dado que um horário já foi cadastrado
+Quando tentar cadastrá-lo novamente
+Então o sistema deve impedir a duplicidade.
