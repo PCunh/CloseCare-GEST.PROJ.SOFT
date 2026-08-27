@@ -161,3 +161,32 @@ Cenário 2 – Horário duplicado
 Dado que um horário já foi cadastrado
 Quando tentar cadastrá-lo novamente
 Então o sistema deve impedir a duplicidade.
+
+HU12 – Cadastrar Usuario
+Como paciente ou profissional, quero cadastrar uma conta no aplicativo para atender minhas necessidades.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Agenda publicada
+Dado que estou autenticado como profissional
+Quando cadastrar datas e horários disponíveis
+Então eles devem ficar visíveis para os pacientes.
+
+Cenário 2 – Horário duplicado
+Dado que um horário já foi cadastrado
+Quando tentar cadastrá-lo novamente
+Então o sistema deve impedir a duplicidade.
+
+
+HU13 – Logar Usuario
+Como paciente ou profissional, quero logar no aplicativo para .
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Agenda publicada
+Dado que estou autenticado como profissional
+Quando cadastrar datas e horários disponíveis
+Então eles devem ficar visíveis para os pacientes.
+
+Cenário 2 – Horário duplicado
+Dado que um horário já foi cadastrado
+Quando tentar cadastrá-lo novamente
+Então o sistema deve impedir a duplicidade.
