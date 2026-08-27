@@ -166,10 +166,9 @@ HU12 – Cadastrar usuário
 Como paciente ou profissional, quero cadastrar uma conta no aplicativo para acessar os serviços de atendimento conforme meu perfil.
 Prioridade: Must Have
 Critérios de Aceite
-Cenário 1 – Cadastro realizado com sucesso
+Cenário 1 – Usuário cadastrado 
 Dado que estou na tela de cadastro
-Quando preencher todos os dados obrigatórios corretamente
-E confirmar o cadastro
+Quando o usuario preencher todos os dados obrigatórios corretamente e confirmar o cadastro
 Então minha conta deve ser criada
 E devo receber a confirmação do cadastro.
 
@@ -183,7 +182,7 @@ HU13 – Logar usuário
 Como paciente ou profissional, quero realizar login no aplicativo para acessar minha conta e utilizar as funcionalidades disponíveis.
 Prioridade: Must Have
 Critérios de Aceite
-Cenário 1 – Login realizado com sucesso
+Cenário 1 – Usuário logado
 Dado que possuo uma conta cadastrada
 Quando informar e-mail e senha válidos
 Então devo ser autenticado
