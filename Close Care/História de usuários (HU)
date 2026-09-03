@@ -7,7 +7,8 @@ Para obter qual valor?
 refinar História de usuário em geral NÃO ESQUECE LUCCAAAAAAAAAAAAA, trocar em cada HU (Prioridade por MOSCOW)
 
 HU01 – Agendar consulta
-Como paciente, quero agendar uma consulta conforme minhas necessidades para receber atendimento no horário mais adequado.
+Como paciente com mobilidade reduzida ou idoso, quero agendar uma consulta domiciliar selecionando o tipo de profissional, a data, o horário e 
+o meu endereço cadastrado para receber atendimento médico em casa com conforto, sem a necessidade de deslocamento.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Agendamento realizado
@@ -23,7 +24,8 @@ Então o sistema deve impedir o agendamento
 E solicitar a escolha de outro horário.
 
 HU02 – Agendar exame
-Como paciente, quero agendar um exame para realizá-lo em uma data conveniente.
+Como paciente com mobilidade reduzida ou idoso, quero agendar a realização de um exame domiciliar informando a data e horário conveniente 
+com o profissional desejado para realizar exames diagnósticos sem sair de casa e sem enfrentar barreiras de acessibilidade.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Exame agendado
@@ -37,7 +39,8 @@ Quando tentar agendar
 Então o sistema deve informar a indisponibilidade.
 
 HU03 – Solicitar consulta
-Como profissional de saúde, quero solicitar uma consulta para um paciente para garantir a continuidade do tratamento.
+Como profissional de saúde, quero solicitar/encaminhar uma consulta de retorno ou especialidade para um paciente cadastrado para garantir 
+a continuidade do tratamento e o acompanhamento preventivo do paciente
 Prioridade: Should Have
 Critérios de Aceite
 Cenário 1 – Solicitação criada
@@ -51,7 +54,8 @@ Quando tentar solicitar
 Então o sistema deve impedir a operação.
 
 HU04 – Solicitar exame
-Como profissional de saúde, quero solicitar um exame para um paciente para apoiar o diagnóstico.
+Como profissional de saúde, quero solicitar um pedido de exame domiciliar vinculando o tipo de exame e orientações 
+de preparo ao paciente para orientar a equipe ou mesmo o profissional encarregado e embasar o diagnóstico clínico do paciente.
 Prioridade: Should Have
 Critérios de Aceite
 Cenário 1 – Exame solicitado
@@ -65,7 +69,7 @@ Quando enviar a solicitação
 Então o sistema deve impedir o envio.
 
 HU05 – Listar consultas
-Como paciente ou profissional, quero visualizar as consultas cadastradas para acompanhar os atendimentos.
+Como paciente ou profissional de saúde, quero visualizar a lista de consultas cadastradas para acompanhar os atendimentos agendados.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Lista exibida
@@ -79,7 +83,8 @@ Quando acessar a lista
 Então o sistema deve informar que não há consultas cadastradas.
 
 HU06 – Listar exames
-Como paciente ou profissional, quero visualizar os exames cadastrados para acompanhar as solicitações e agendamentos.
+Como paciente ou profissional de saúde, quero consultar a lista de exames cadastrados para acompanhar as solicitações e agendamentos
+para verificar os laudos disponibilizados.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Exames exibidos
@@ -93,7 +98,8 @@ Quando acessar a lista
 Então o sistema deve informar que não há exames registrados.
 
 HU07 – Remarcar consulta
-Como paciente ou profissional, quero remarcar uma consulta para adequar o atendimento à disponibilidade.
+Como paciente ou profissional de saúde, quero alterar a data e o horário de uma consulta domiciliar já agendada por conta de imprevistos 
+de agenda de uma ou ambas as partes.
 Prioridade: Should Have
 Critérios de Aceite
 Cenário 1 – Remarcação concluída
@@ -107,7 +113,8 @@ Quando tentar confirmar
 Então o sistema deve impedir a remarcação.
 
 HU08 – Remarcar exame
-Como paciente ou profissional, quero remarcar um exame para ajustar sua realização.
+Como paciente ou profissional de saúde, quero remarcar a data e/ou horário de um exame ja agendado por conta de imprevistos 
+de agenda de uma ou ambas as partes.
 Prioridade: Should Have
 Critérios de Aceite
 Cenário 1 – Exame remarcado
@@ -121,7 +128,8 @@ Quando tentar remarcar
 Então o sistema deve impedir a alteração.
 
 HU09 – Cancelar consulta
-Como paciente ou profissional, quero cancelar uma consulta para liberar o horário quando não puder comparecer.
+Como paciente ou profissional de saúde, quero cancelar uma consulta domiciliar previamente confirmada por conta de 
+imprevistos na agenda de uma ou ambas as partes.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Cancelamento realizado
@@ -136,7 +144,8 @@ Quando tentar cancelar
 Então o sistema deve exibir uma mensagem de erro.
 
 HU10 – Cancelar exame
-Como paciente ou profissional, quero cancelar um exame para liberar o horário reservado.
+Como paciente ou profissional de saúde, quero cancelar um exame domiciliar previamente confirmada por conta de 
+imprevistos na agenda de uma ou ambas as partes.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Exame cancelado
@@ -150,7 +159,8 @@ Quando tentar cancelar
 Então o sistema deve impedir a operação.
 
 HU11 – Disponibilizar agenda
-Como profissional de saúde, quero definir datas e horários disponíveis para que pacientes possam realizar agendamentos.
+Como profissional de saúde, quero cadastrar meus horários de atendimento, especialidade e raio de distância que aceito percorrer para visitas
+Para restringir e permitir que apenas pacientes localizados na minha área designada consigam agendar consultas.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Agenda publicada
@@ -164,7 +174,8 @@ Quando tentar cadastrá-lo novamente
 Então o sistema deve impedir a duplicidade.
 
 HU12 – Cadastrar usuário
-Como paciente ou profissional, quero cadastrar uma conta no aplicativo para acessar os serviços de atendimento conforme meu perfil.
+Como paciente com falta de mobilidade ou profissional, quero cadastrar uma conta no aplicativo inserindo meus dados para acessar os serviços 
+de atendimento domiciliar conforme o meu tipo de conta.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Usuário cadastrado 
@@ -180,7 +191,8 @@ Então o sistema deve impedir o cadastro
 E informar que o e-mail já está em uso.
 
 HU13 – Logar usuário
-Como paciente ou profissional, quero realizar login no aplicativo para acessar minha conta e utilizar as funcionalidades disponíveis.
+Como paciente com falta de mobilidade ou profissional, quero realizar login digitando minhas credenciais no aplicativo 
+para acessar minha conta e utilizar as funcionalidades disponíveis da plataforma.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Usuário logado
