@@ -1,15 +1,9 @@
-1. QUEM?
-Como quem?
-2. O QUÊ?
-Quero fazer o quê?
-3. POR QUÊ?
-Para obter qual valor?
-refinar História de usuário em geral NÃO ESQUECE LUCCAAAAAAAAAAAAA, trocar em cada HU (Prioridade por MOSCOW)
+# **HISTÓRIAS DE USUÁRIO**
 
-Épico HU01 – Agendar consulta domiciliar
+## **Épico HU01 – Agendar consulta domiciliar**
 Objetivo: permitir que um paciente agende uma consulta em domicílio.
 
-HU01.1 – Selecionar tipo de profissional
+### **HU01.1 – Selecionar tipo de profissional**
 Como paciente com mobilidade reduzida ou idoso, quero selecionar o tipo de profissional de saúde para atendimento domiciliar para encontrar o atendimento adequado.
 Prioridade: Must Have
 Critérios de Aceite
@@ -17,7 +11,7 @@ Dado que existem profissionais cadastrados
 Quando acessar o agendamento
 Então devo visualizar os tipos de profissionais disponíveis para seleção.
 
-HU01.2 – Visualizar horários disponíveis
+### **HU01.2 – Visualizar horários disponíveis**
 Como paciente, quero visualizar as datas e horários disponíveis do profissional escolhido para escolher um horário livre.
 Prioridade: Must Have
 Critérios de Aceite
@@ -25,7 +19,7 @@ Dado que um profissional foi selecionado
 Quando visualizar sua agenda
 Então devo ver apenas horários disponíveis.
 
-HU01.3 – Confirmar agendamento da consulta
+### **HU01.3 – Confirmar agendamento da consulta**
 Como paciente, quero confirmar o agendamento da consulta domiciliar para garantir minha reserva.
 Prioridade: Must Have
 Critérios de Aceite
@@ -35,7 +29,7 @@ Quando confirmar o agendamento
 Então a consulta deve ser registrada
 E o horário deve ficar indisponível para outros pacientes.
 
-HU01.4 – Impedir reserva de horário ocupado
+### **HU01.4 – Impedir reserva de horário ocupado**
 Como paciente, quero ser informado quando um horário já estiver ocupado para escolher outra opção.
 Prioridade: Must Have
 Critérios de Aceite
@@ -45,7 +39,7 @@ Quando tentar agendá-lo
 Então o sistema deve impedir o agendamento
 E solicitar a escolha de outro horário.
 
-HU01.5 – Utilizar endereço cadastrado
+### **HU01.5 – Utilizar endereço cadastrado**
 Como paciente, quero utilizar meu endereço cadastrado no agendamento para que o atendimento seja realizado no local correto.
 Prioridade: Should Have
 Critérios de Aceite
@@ -53,10 +47,10 @@ Dado que possuo um endereço cadastrado
 Quando confirmar o agendamento
 Então o endereço deve ser associado automaticamente à consulta.
 
-Épico HU02 – Agendar exame domiciliar
+## **Épico HU02 – Agendar exame domiciliar**
 Objetivo: permitir que um paciente agende exames em domicílio.
 
-HU02.1 – Selecionar profissional para exame
+### **HU02.1 – Selecionar profissional para exame**
 Como paciente com mobilidade reduzida ou idoso, quero escolher o profissional responsável pelo exame domiciliar para realizar o procedimento desejado.
 Prioridade: Must Have
 Critérios de Aceite
@@ -64,7 +58,7 @@ Dado que existem profissionais habilitados
 Quando iniciar o agendamento
 Então devo visualizar os profissionais disponíveis.
 
-HU02.2 – Escolher data e horário do exame
+### **HU02.2 – Escolher data e horário do exame**
 Como paciente, quero escolher uma data e um horário disponíveis para agendar meu exame.
 Prioridade: Must Have
 Critérios de Aceite
@@ -72,7 +66,7 @@ Dado que selecionei um profissional
 Quando visualizar sua agenda
 Então devo ver apenas horários disponíveis.
 
-HU02.3 – Confirmar agendamento do exame
+### **HU02.3 – Confirmar agendamento do exame**
 Como paciente, quero confirmar o agendamento do exame domiciliar para garantir minha reserva.
 Prioridade: Must Have
 Critérios de Aceite
@@ -81,7 +75,7 @@ Dado que existe disponibilidade
 Quando confirmar o agendamento
 Então o exame deve ser registrado.
 
-HU02.4 – Vincular endereço ao exame
+### **HU02.4 – Vincular endereço ao exame**
 Como paciente, quero que meu endereço cadastrado seja utilizado no exame domiciliar para que o profissional saiba onde realizar o atendimento.
 Prioridade: Should Have
 Critérios de Aceite
@@ -89,7 +83,7 @@ Dado que possuo um endereço cadastrado
 Quando confirmar o agendamento
 Então o endereço deve ser associado ao exame.
 
-HU03 – Solicitar consulta
+## **HU03 – Solicitar consulta**
 Como profissional de saúde, quero solicitar/encaminhar uma consulta de retorno ou especialidade para um paciente cadastrado para garantir 
 a continuidade do tratamento e o acompanhamento preventivo do paciente
 Prioridade: Should Have
@@ -99,12 +93,12 @@ Dado que selecionei um paciente
 Quando solicitar uma consulta
 Então o pedido deve ser registrado.
 
-Cenário 2 – Paciente inválido
+### **Cenário 2 – Paciente inválido**
 Dado que o paciente não está cadastrado
 Quando tentar solicitar
 Então o sistema deve impedir a operação.
 
-HU04 – Solicitar exame
+## **HU04 – Solicitar exame**
 Como profissional de saúde, quero solicitar um pedido de exame domiciliar vinculando o tipo de exame e orientações 
 de preparo ao paciente para orientar a equipe ou mesmo o profissional encarregado e embasar o diagnóstico clínico do paciente.
 Prioridade: Should Have
@@ -114,12 +108,12 @@ Dado que o paciente está cadastrado
 Quando solicitar um exame
 Então a solicitação deve ser registrada.
 
-Cenário 2 – Dados incompletos
+### **Cenário 2 – Dados incompletos**
 Dado que informações obrigatórias não foram preenchidas
 Quando enviar a solicitação
 Então o sistema deve impedir o envio.
 
-HU05 – Listar consultas
+## **HU05 – Listar consultas**
 Como paciente ou profissional de saúde, quero visualizar a lista de consultas cadastradas para acompanhar os atendimentos agendados.
 Prioridade: Must Have
 Critérios de Aceite
@@ -128,12 +122,12 @@ Dado que existem consultas cadastradas
 Quando acessar a lista
 Então todas as consultas devem ser exibidas em ordem cronológica.
 
-Cenário 2 – Nenhuma consulta
+### **Cenário 2 – Nenhuma consulta**
 Dado que não existem consultas
 Quando acessar a lista
 Então o sistema deve informar que não há consultas cadastradas.
 
-HU06 – Listar exames
+## **HU06 – Listar exames**
 Como paciente ou profissional de saúde, quero consultar a lista de exames cadastrados para acompanhar as solicitações e agendamentos
 para verificar os laudos disponibilizados.
 Prioridade: Must Have
@@ -143,12 +137,12 @@ Dado que existem exames registrados
 Quando acessar a lista
 Então todos os exames devem ser exibidos.
 
-Cenário 2 – Nenhum exame
+### **Cenário 2 – Nenhum exame**
 Dado que não existem exames
 Quando acessar a lista
 Então o sistema deve informar que não há exames registrados.
 
-HU07 – Remarcar consulta
+## **HU07 – Remarcar consulta**
 Como paciente ou profissional de saúde, quero alterar a data e o horário de uma consulta domiciliar já agendada por conta de imprevistos 
 de agenda de uma ou ambas as partes.
 Prioridade: Should Have
@@ -158,12 +152,12 @@ Dado que a consulta existe
 Quando escolher um novo horário disponível
 Então a consulta deve ser atualizada.
 
-Cenário 2 – Novo horário indisponível
+### **Cenário 2 – Novo horário indisponível**
 Dado que o novo horário está ocupado
 Quando tentar confirmar
 Então o sistema deve impedir a remarcação.
 
-HU08 – Remarcar exame
+## **HU08 – Remarcar exame**
 Como paciente ou profissional de saúde, quero remarcar a data e/ou horário de um exame ja agendado por conta de imprevistos 
 de agenda de uma ou ambas as partes.
 Prioridade: Should Have
@@ -173,12 +167,12 @@ Dado que o exame existe
 Quando selecionar um novo horário disponível
 Então o sistema deve atualizar o agendamento.
 
-Cenário 2 – Horário inválido
+### **Cenário 2 – Horário inválido**
 Dado que o horário não está disponível
 Quando tentar remarcar
 Então o sistema deve impedir a alteração.
 
-HU09 – Cancelar consulta
+## **HU09 – Cancelar consulta**
 Como paciente ou profissional de saúde, quero cancelar uma consulta domiciliar previamente confirmada por conta de 
 imprevistos na agenda de uma ou ambas as partes.
 Prioridade: Must Have
@@ -189,12 +183,12 @@ Quando confirmar o cancelamento
 Então a consulta deve ser cancelada
 E o horário deve voltar a ficar disponível.
 
-Cenário 2 – Consulta inexistente
+### **Cenário 2 – Consulta inexistente**
 Dado que a consulta não existe
 Quando tentar cancelar
 Então o sistema deve exibir uma mensagem de erro.
 
-HU10 – Cancelar exame
+## **HU10 – Cancelar exame**
 Como paciente ou profissional de saúde, quero cancelar um exame domiciliar previamente confirmada por conta de 
 imprevistos na agenda de uma ou ambas as partes.
 Prioridade: Must Have
@@ -204,12 +198,12 @@ Dado que o exame está agendado
 Quando confirmar o cancelamento
 Então o exame deve ser cancelado.
 
-Cenário 2 – Exame inexistente
+### **Cenário 2 – Exame inexistente**
 Dado que o exame não existe
 Quando tentar cancelar
 Então o sistema deve impedir a operação.
 
-HU11 – Disponibilizar agenda
+## **HU11 – Disponibilizar agenda**
 Como profissional de saúde, quero cadastrar meus horários de atendimento, especialidade e raio de distância que aceito percorrer para visitas
 Para restringir e permitir que apenas pacientes localizados na minha área designada consigam agendar consultas.
 Prioridade: Must Have
@@ -219,12 +213,12 @@ Dado que estou autenticado como profissional
 Quando cadastrar datas e horários disponíveis
 Então eles devem ficar visíveis para os pacientes.
 
-Cenário 2 – Horário duplicado
+### **Cenário 2 – Horário duplicado**
 Dado que um horário já foi cadastrado
 Quando tentar cadastrá-lo novamente
 Então o sistema deve impedir a duplicidade.
 
-HU12 – Cadastrar usuário
+## **HU12 – Cadastrar usuário**
 Como paciente com falta de mobilidade ou profissional, quero cadastrar uma conta no aplicativo inserindo meus dados para acessar os serviços 
 de atendimento domiciliar conforme o meu tipo de conta.
 Prioridade: Must Have
@@ -235,13 +229,13 @@ Quando o usuario preencher todos os dados obrigatórios corretamente e confirmar
 Então minha conta deve ser criada
 E devo receber a confirmação do cadastro.
 
-Cenário 2 – E-mail já cadastrado
+### **Cenário 2 – E-mail já cadastrado**
 Dado que existe uma conta cadastrada com o mesmo e-mail
 Quando tentar criar uma nova conta
 Então o sistema deve impedir o cadastro
 E informar que o e-mail já está em uso.
 
-HU13 – Logar usuário
+## **HU13 – Logar usuário**
 Como paciente com falta de mobilidade ou profissional, quero realizar login digitando minhas credenciais no aplicativo 
 para acessar minha conta e utilizar as funcionalidades disponíveis da plataforma.
 Prioridade: Must Have
@@ -252,7 +246,7 @@ Quando informar e-mail e senha válidos
 Então devo ser autenticado
 E ser direcionado para a tela inicial do aplicativo.
 
-Cenário 2 – Credenciais inválidas
+## **Cenário 2 – Credenciais inválidas**
 Dado que estou na tela de login
 Quando informar e-mail ou senha incorretos
 Então o sistema deve impedir o acesso
