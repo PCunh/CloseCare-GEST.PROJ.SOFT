@@ -6,26 +6,74 @@ Quero fazer o quê?
 Para obter qual valor?
 refinar História de usuário em geral NÃO ESQUECE LUCCAAAAAAAAAAAAA, trocar em cada HU (Prioridade por MOSCOW)
 
-HU01 – Agendar consulta
-Como paciente com mobilidade reduzida ou idoso, quero agendar uma consulta domiciliar selecionando o tipo de profissional, a data, o horário e 
-o meu endereço cadastrado para receber atendimento médico em casa com conforto, sem a necessidade de deslocamento.
+Épico HU01 – Agendar consulta domiciliar
+Objetivo: permitir que um paciente agende uma consulta em domicílio.
+
+HU01.1 – Selecionar tipo de profissional
+Como paciente com mobilidade reduzida ou idoso, quero selecionar o tipo de profissional de saúde para atendimento domiciliar para encontrar o atendimento adequado.
+Prioridade: Must Have
+Critérios de Aceite
+Dado que existem profissionais cadastrados
+Quando acessar o agendamento
+Então devo visualizar os tipos de profissionais disponíveis para seleção.
+
+HU01.2 – Visualizar horários disponíveis
+Como paciente, quero visualizar as datas e horários disponíveis do profissional escolhido para escolher um horário livre.
+Prioridade: Must Have
+Critérios de Aceite
+Dado que um profissional foi selecionado
+Quando visualizar sua agenda
+Então devo ver apenas horários disponíveis.
+
+HU01.3 – Confirmar agendamento da consulta
+Como paciente, quero confirmar o agendamento da consulta domiciliar para garantir minha reserva.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Agendamento realizado
-Dado que existem horários disponíveis
-Quando selecionar um horário e confirmar o agendamento
+Dado que existe um horário disponível
+Quando confirmar o agendamento
 Então a consulta deve ser registrada
 E o horário deve ficar indisponível para outros pacientes.
 
-Cenário 2 – Horário indisponível
+HU01.4 – Impedir reserva de horário ocupado
+Como paciente, quero ser informado quando um horário já estiver ocupado para escolher outra opção.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Horário indisponível
 Dado que o horário foi ocupado
 Quando tentar agendá-lo
 Então o sistema deve impedir o agendamento
 E solicitar a escolha de outro horário.
 
-HU02 – Agendar exame
-Como paciente com mobilidade reduzida ou idoso, quero agendar a realização de um exame domiciliar informando a data e horário conveniente 
-com o profissional desejado para realizar exames diagnósticos sem sair de casa e sem enfrentar barreiras de acessibilidade.
+HU01.5 – Utilizar endereço cadastrado
+Como paciente, quero utilizar meu endereço cadastrado no agendamento para que o atendimento seja realizado no local correto.
+Prioridade: Should Have
+Critérios de Aceite
+Dado que possuo um endereço cadastrado
+Quando confirmar o agendamento
+Então o endereço deve ser associado automaticamente à consulta.
+
+Épico HU02 – Agendar exame domiciliar
+Objetivo: permitir que um paciente agende exames em domicílio.
+
+HU02.1 – Selecionar profissional para exame
+Como paciente com mobilidade reduzida ou idoso, quero escolher o profissional responsável pelo exame domiciliar para realizar o procedimento desejado.
+Prioridade: Must Have
+Critérios de Aceite
+Dado que existem profissionais habilitados
+Quando iniciar o agendamento
+Então devo visualizar os profissionais disponíveis.
+
+HU02.2 – Escolher data e horário do exame
+Como paciente, quero escolher uma data e um horário disponíveis para agendar meu exame.
+Prioridade: Must Have
+Critérios de Aceite
+Dado que selecionei um profissional
+Quando visualizar sua agenda
+Então devo ver apenas horários disponíveis.
+
+HU02.3 – Confirmar agendamento do exame
+Como paciente, quero confirmar o agendamento do exame domiciliar para garantir minha reserva.
 Prioridade: Must Have
 Critérios de Aceite
 Cenário 1 – Exame agendado
@@ -33,10 +81,22 @@ Dado que existe disponibilidade
 Quando confirmar o agendamento
 Então o exame deve ser registrado.
 
-Cenário 2 – Sem disponibilidade
+HU02.4 – Informar indisponibilidade de horários
+Como paciente, quero ser informado quando não houver horários disponíveis para tentar outra data.
+Prioridade: Must Have
+Critérios de Aceite
+Cenário 1 – Sem disponibilidade
 Dado que não há horários disponíveis
 Quando tentar agendar
 Então o sistema deve informar a indisponibilidade.
+
+HU02.5 – Vincular endereço ao exame
+Como paciente, quero que meu endereço cadastrado seja utilizado no exame domiciliar para que o profissional saiba onde realizar o atendimento.
+Prioridade: Should Have
+Critérios de Aceite
+Dado que possuo um endereço cadastrado
+Quando confirmar o agendamento
+Então o endereço deve ser associado ao exame.
 
 HU03 – Solicitar consulta
 Como profissional de saúde, quero solicitar/encaminhar uma consulta de retorno ou especialidade para um paciente cadastrado para garantir 
