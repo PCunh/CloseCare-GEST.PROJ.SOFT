@@ -81,16 +81,7 @@ Dado que existe disponibilidade
 Quando confirmar o agendamento
 Então o exame deve ser registrado.
 
-HU02.4 – Informar indisponibilidade de horários
-Como paciente, quero ser informado quando não houver horários disponíveis para tentar outra data.
-Prioridade: Must Have
-Critérios de Aceite
-Cenário 1 – Sem disponibilidade
-Dado que não há horários disponíveis
-Quando tentar agendar
-Então o sistema deve informar a indisponibilidade.
-
-HU02.5 – Vincular endereço ao exame
+HU02.4 – Vincular endereço ao exame
 Como paciente, quero que meu endereço cadastrado seja utilizado no exame domiciliar para que o profissional saiba onde realizar o atendimento.
 Prioridade: Should Have
 Critérios de Aceite
