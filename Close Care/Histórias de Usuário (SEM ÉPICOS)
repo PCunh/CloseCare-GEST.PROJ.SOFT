@@ -32,15 +32,7 @@ Quando confirmar o agendamento
 Então a consulta deve ser registrada
 E o horário deve ficar indisponível para outros pacientes.
 
-HU04 – Utilizar endereço cadastrado (HU04)
-Como paciente, quero utilizar meu endereço cadastrado no agendamento para que o atendimento seja realizado no local correto.
-Prioridade: Should Have
-Critérios de Aceite
-Dado que possuo um endereço cadastrado
-Quando confirmar o agendamento
-Então o endereço deve ser associado automaticamente à consulta.
-
-HU05 – Selecionar profissional para exame (HU05)
+HU04 – Selecionar profissional para exame (HU04)
 Como paciente com mobilidade reduzida ou idoso, quero escolher o profissional responsável pelo exame domiciliar para realizar o procedimento desejado.
 Prioridade: Must Have
 Critérios de Aceite
@@ -48,7 +40,7 @@ Dado que existem profissionais habilitados
 Quando iniciar o agendamento
 Então devo visualizar os profissionais disponíveis.
 
-HU06 – Escolher data e horário do exame (HU06)
+HU05 – Escolher data e horário do exame (HU05)
 Como paciente, quero escolher uma data e um horário disponíveis para agendar meu exame.
 Prioridade: Must Have
 Critérios de Aceite
@@ -56,7 +48,7 @@ Dado que selecionei um profissional
 Quando visualizar sua agenda
 Então devo ver apenas horários disponíveis.
 
-HU07 – Confirmar agendamento do exame (HU07)
+HU06 – Confirmar agendamento do exame (HU06)
 Como paciente, quero confirmar o agendamento do exame domiciliar para garantir minha reserva.
 Prioridade: Must Have
 Critérios de Aceite
@@ -65,7 +57,7 @@ Dado que existe disponibilidade
 Quando confirmar o agendamento
 Então o exame deve ser registrado.
 
-HU08 – Vincular endereço ao exame (HU08)
+HU07 – Vincular endereço ao exame (HU07)
 Como paciente, quero que meu endereço cadastrado seja utilizado no exame domiciliar para que o profissional saiba onde realizar o atendimento.
 Prioridade: Should Have
 Critérios de Aceite
@@ -73,7 +65,7 @@ Dado que possuo um endereço cadastrado
 Quando confirmar o agendamento
 Então o endereço deve ser associado ao exame.
 
-HU09 – Solicitar consulta (HU09)
+HU08 – Solicitar consulta (HU08)
 Como profissional de saúde, quero solicitar/encaminhar uma consulta de retorno ou especialidade para um paciente cadastrado para garantir 
 a continuidade do tratamento e o acompanhamento preventivo do paciente
 Prioridade: Should Have
@@ -88,7 +80,7 @@ Dado que o paciente não está cadastrado
 Quando tentar solicitar
 Então o sistema deve impedir a operação.
 
-HU010 – Solicitar exame (HU010)
+HU09 – Solicitar exame (HU09)
 Como profissional de saúde, quero solicitar um pedido de exame domiciliar vinculando o tipo de exame e orientações 
 de preparo ao paciente para orientar a equipe ou mesmo o profissional encarregado e embasar o diagnóstico clínico do paciente.
 Prioridade: Should Have
@@ -103,7 +95,7 @@ Dado que informações obrigatórias não foram preenchidas
 Quando enviar a solicitação
 Então o sistema deve impedir o envio.
 
-HU011 – Listar consultas (HU011)
+HU010 – Listar consultas (HU010)
 Como paciente ou profissional de saúde, quero visualizar a lista de consultas cadastradas para acompanhar os atendimentos agendados.
 Prioridade: Must Have
 Critérios de Aceite
@@ -117,7 +109,7 @@ Dado que não existem consultas
 Quando acessar a lista
 Então o sistema deve informar que não há consultas cadastradas.
 
-HU012 – Listar exames (HU012)
+HU011 – Listar exames (HU011)
 Como paciente ou profissional de saúde, quero consultar a lista de exames cadastrados para acompanhar as solicitações e agendamentos
 para verificar os laudos disponibilizados.
 Prioridade: Must Have
@@ -132,7 +124,7 @@ Dado que não existem exames
 Quando acessar a lista
 Então o sistema deve informar que não há exames registrados.
 
-HU013 – Remarcar consulta (HU013)
+HU012 – Remarcar consulta (HU012)
 Como paciente ou profissional de saúde, quero alterar a data e o horário de uma consulta domiciliar já agendada por conta de imprevistos 
 de agenda de uma ou ambas as partes.
 Prioridade: Should Have
@@ -147,7 +139,7 @@ Dado que o novo horário está ocupado
 Quando tentar confirmar
 Então o sistema deve impedir a remarcação.
 
-HU014 – Remarcar exame (HU014)
+HU013 – Remarcar exame (HU013)
 Como paciente ou profissional de saúde, quero remarcar a data e/ou horário de um exame ja agendado por conta de imprevistos 
 de agenda de uma ou ambas as partes.
 Prioridade: Should Have
@@ -162,7 +154,7 @@ Dado que o horário não está disponível
 Quando tentar remarcar
 Então o sistema deve impedir a alteração.
 
-HU015 – Cancelar consulta (HU015)
+HU014 – Cancelar consulta (HU014)
 Como paciente ou profissional de saúde, quero cancelar uma consulta domiciliar previamente confirmada por conta de 
 imprevistos na agenda de uma ou ambas as partes.
 Prioridade: Must Have
@@ -178,7 +170,7 @@ Dado que a consulta não existe
 Quando tentar cancelar
 Então o sistema deve exibir uma mensagem de erro.
 
-HU016 – Cancelar exame (HU016)
+HU015 – Cancelar exame (HU015)
 Como paciente ou profissional de saúde, quero cancelar um exame domiciliar previamente confirmada por conta de 
 imprevistos na agenda de uma ou ambas as partes.
 Prioridade: Must Have
@@ -193,7 +185,7 @@ Dado que o exame não existe
 Quando tentar cancelar
 Então o sistema deve impedir a operação.
 
-HU017 – Disponibilizar agenda (HU017)
+HU016 – Disponibilizar agenda (HU016)
 Como profissional de saúde, quero cadastrar meus horários de atendimento, especialidade e raio de distância que aceito percorrer para visitas
 Para restringir e permitir que apenas pacientes localizados na minha área designada consigam agendar consultas.
 Prioridade: Must Have
@@ -208,7 +200,7 @@ Dado que um horário já foi cadastrado
 Quando tentar cadastrá-lo novamente
 Então o sistema deve impedir a duplicidade.
 
-HU018 – Cadastrar usuário (HU018)
+HU017 – Cadastrar usuário (HU017)
 Como paciente com falta de mobilidade ou profissional, quero cadastrar uma conta no aplicativo inserindo meus dados para acessar os serviços 
 de atendimento domiciliar conforme o meu tipo de conta.
 Prioridade: Must Have
@@ -225,7 +217,7 @@ Quando tentar criar uma nova conta
 Então o sistema deve impedir o cadastro
 E informar que o e-mail já está em uso.
 
-HU019 – Logar usuário (HU019)
+HU018 – Logar usuário (HU018)
 Como paciente com falta de mobilidade ou profissional, quero realizar login digitando minhas credenciais no aplicativo 
 para acessar minha conta e utilizar as funcionalidades disponíveis da plataforma.
 Prioridade: Must Have
