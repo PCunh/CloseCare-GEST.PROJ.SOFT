@@ -1,4 +1,4 @@
-# CC7540: GESTÃO DE PROJETOS DE SOFTWARE - Close Care
+# CC7540: GESTÃO DE PROJ. DE SOFTWARE - Close Care
 
 ## INTEGRANTES
  * Pedro da Silva Cunha
