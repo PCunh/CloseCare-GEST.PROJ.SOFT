@@ -1,0 +1,4 @@
+# Ignore Microsoft Office temporary lock files
+~$*.xlsx
+~$*.xls
+~$*.xlsm
