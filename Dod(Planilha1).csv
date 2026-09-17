@@ -1,0 +1,14 @@
+Pesquisar profissional por especialidade;;;
+FALSO;Buscar por especialidade;;
+FALSO;Lista de profissionais é exibida;;
+FALSO;Consulta ao banco retorna resultados corretos;;
+;;;
+Visualizar horários disponíveis;;;
+FALSO;Horários do profissional são carregados;;
+FALSO;Horários ocupados não aparecem como disponíveis;;
+FALSO;Exibir interface com os horários;;
+;;;
+Confirmar agendamento;;;
+FALSO;Consulta é salva no banco;;
+FALSO;Horários fica indisponíveis;;
+FALSO;Mensagem de confirmação é exibida;;
