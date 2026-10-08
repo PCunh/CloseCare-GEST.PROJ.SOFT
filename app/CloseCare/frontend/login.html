@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/login.js" defer></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html">Profissionais</a>
+            <a href="login.html" aria-current="page">
+                Entrar
+            </a>
+            <a href="cadastro.html">Cadastrar</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="login-container">
+
+            <h2>Entrar na sua conta</h2>
+
+            <p>
+                Informe suas credenciais para acessar
+                os serviços do Close Care.
+            </p>
+
+            <form id="form-login">
+
+                <div class="campo">
+
+                    <label for="email">E-mail</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="senha">Senha</label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit" id="btn-login">
+                    Entrar
+                </button>
+
+                <p
+                    id="mensagem-login"
+                    class="resultado"
+                    role="status"
+                    aria-live="polite"
+                    hidden>
+                </p>
+
+            </form>
+
+            <p class="link-cadastro">
+                Ainda não possui uma conta?
+                <a href="cadastro.html">Cadastre-se aqui</a>
+            </p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>

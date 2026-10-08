@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Cadastro - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/cadastro.js" defer></script>
+    
+</head>
+
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html">Profissionais</a>
+            <a href="login.html">Entrar</a>
+            <a href="cadastro.html" aria-current="page">
+                Cadastrar
+            </a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="cadastro-container">
+
+            <h2>Criar conta</h2>
+
+            <p>
+                Preencha seus dados para utilizar
+                os serviços do Close Care.
+            </p>
+
+            <form id="form-cadastro">
+
+                <div class="campo">
+                    <label for="nome">Nome completo</label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        minlength="3"
+                        maxlength="150"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="email">E-mail</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        maxlength="150"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="senha">Senha</label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        minlength="8"
+                        maxlength="128"
+                        autocomplete="new-password"
+                        required
+                    >
+                    <small>
+                        Utilize pelo menos 8 caracteres.
+                    </small>
+                </div>
+
+                <div class="campo">
+                    <label for="confirmar-senha">
+                        Confirmar senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmar-senha"
+                        name="confirmar-senha"
+                        minlength="8"
+                        maxlength="128"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="tipo-usuario">
+                        Tipo de conta
+                    </label>
+
+                    <select id="tipo-usuario"
+                            name="tipo-usuario"
+                            required>
+                        <option value="">
+                            Selecione uma opção
+                        </option>
+
+                        <option value="paciente">
+                            Paciente
+                        </option>
+
+                        <option value="profissional">
+                            Profissional de saúde
+                        </option>
+                    </select>
+                </div>
+
+                <div id="campos-paciente" hidden>
+
+                    <h3>Dados do paciente</h3>
+
+                    <div class="campo">
+                        <label for="telefone">
+                            Telefone
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="telefone"
+                            name="telefone"
+                            maxlength="20"
+                            autocomplete="tel"
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="endereco">
+                            Endereço
+                        </label>
+
+                        <input
+                            type="text"
+                            id="endereco"
+                            name="endereco"
+                            maxlength="255"
+                            autocomplete="street-address"
+                        >
+                    </div>
+
+                </div>
+
+                <div id="campos-profissional" hidden>
+
+                    <h3>Dados profissionais</h3>
+
+                    <div class="campo">
+                        <label for="especialidade">
+                            Especialidade
+                        </label>
+
+                        <input
+                            type="text"
+                            id="especialidade"
+                            name="especialidade"
+                            maxlength="100"
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="raio-atendimento">
+                            Raio de atendimento (km)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="raio-atendimento"
+                            name="raio-atendimento"
+                            min="0"
+                            max="500"
+                            value="10"
+                        >
+                    </div>
+
+                </div>
+
+                <button type="submit" id="btn-cadastrar">
+                    Criar conta
+                </button>
+
+                <p id="mensagem-cadastro"
+                   class="resultado"
+                   role="status"
+                   aria-live="polite"
+                   hidden>
+                </p>
+
+            </form>
+
+            <p class="link-login">
+                Já possui uma conta?
+                <a href="login.html">Entre aqui</a>
+            </p>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>

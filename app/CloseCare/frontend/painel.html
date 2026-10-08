@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Minha Conta - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/painel.js" defer></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html">Profissionais</a>
+            <a href="painel.html">Minha conta</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="painel-container">
+
+            <h2>Minha conta</h2>
+
+            <p id="carregando-perfil" role="status">
+                Verificando autenticação...
+            </p>
+
+            <div id="conteudo-perfil" hidden>
+
+                <h3 id="boas-vindas"></h3>
+
+                <div class="dados-perfil">
+
+                    <p>
+                        <strong>Nome:</strong>
+                        <span id="perfil-nome"></span>
+                    </p>
+
+                    <p>
+                        <strong>E-mail:</strong>
+                        <span id="perfil-email"></span>
+                    </p>
+
+                    <p>
+                        <strong>Tipo de conta:</strong>
+                        <span id="perfil-tipo"></span>
+                    </p>
+
+                </div>
+
+                <div id="area-paciente" hidden>
+                    <h3>Área do paciente</h3>
+
+                    <p>
+                        Aqui você poderá consultar seus
+                        agendamentos e exames.
+                    </p>
+                </div>
+
+                <div id="area-profissional" hidden>
+                    <h3>Área do profissional</h3>
+
+                    <p>
+                        Aqui você poderá gerenciar seus
+                        horários e atendimentos.
+                    </p>
+                </div>
+
+                <button id="btn-sair" type="button">
+                    Sair da conta
+                </button>
+
+                <p
+                    id="mensagem-painel"
+                    class="resultado"
+                    role="status"
+                    aria-live="polite"
+                    hidden>
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>

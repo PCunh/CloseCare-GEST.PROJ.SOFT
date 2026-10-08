@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import Usuario, Profissional, Horario, Agendamento
 
+from routers import usuarios, auth
+
 app = FastAPI(
     title="Close Care",
     description="Sistema de atendimento domiciliar Close Care",
@@ -22,10 +24,13 @@ origens_permitidas = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origens_permitidas,
-    allow_credentials=False,
-    allow_methods=["GET"],
-    allow_headers=["*"]
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Accept"]
 )
+
+app.include_router(usuarios.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def inicio():

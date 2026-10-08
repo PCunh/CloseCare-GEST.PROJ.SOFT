@@ -169,3 +169,147 @@ footer {
         width: 100%;
     }
 }
+
+.cadastro-container {
+    max-width: 600px;
+    margin: 30px auto 60px;
+    padding: 35px;
+    background-color: white;
+    border: 1px solid #dce4e8;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.cadastro-container h2 {
+    margin-top: 0;
+    color: #176b87;
+}
+
+.cadastro-container h3 {
+    margin-top: 30px;
+    font-size: 19px;
+    color: #176b87;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 20px;
+}
+
+.campo label {
+    font-weight: bold;
+}
+
+.campo input,
+.campo select {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px;
+    border: 1px solid #9caab3;
+    border-radius: 7px;
+    background-color: white;
+    color: #243447;
+    font-size: 16px;
+}
+
+.campo input:focus,
+.campo select:focus {
+    outline: 3px solid #aed9e8;
+    border-color: #176b87;
+}
+
+.campo small {
+    color: #52616b;
+}
+
+.cadastro-container button[type="submit"] {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 10px;
+}
+
+.link-login {
+    margin-top: 25px;
+    text-align: center;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .cadastro-container {
+        padding: 20px;
+        margin: 15px auto 40px;
+    }
+}
+
+.login-container,
+.painel-container {
+    max-width: 600px;
+    margin: 40px auto 60px;
+    padding: 35px;
+    background-color: white;
+    border: 1px solid #dce4e8;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.login-container h2,
+.painel-container h2 {
+    margin-top: 0;
+    color: #176b87;
+}
+
+.login-container button[type="submit"] {
+    width: 100%;
+    margin-top: 10px;
+    min-height: 48px;
+}
+
+.link-cadastro {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.dados-perfil {
+    margin: 25px 0;
+    padding: 20px;
+    background-color: #f5f8fa;
+    border-radius: 8px;
+}
+
+.dados-perfil p {
+    margin: 12px 0;
+}
+
+#area-paciente,
+#area-profissional {
+    margin: 25px 0;
+    padding: 20px;
+    border: 1px solid #dce4e8;
+    border-radius: 8px;
+}
+
+#btn-sair {
+    background-color: #a61b1b;
+}
+
+#btn-sair:hover {
+    background-color: #841616;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+
+    .login-container,
+    .painel-container {
+        margin: 15px auto 40px;
+        padding: 20px;
+    }
+}
