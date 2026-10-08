@@ -3,14 +3,23 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Close Care - Início</title>
+
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js" defer></script>
     <script src="js/app.js" defer></script>
+    
 </head>
+
 <body>
+
     <header>
         <h1>Close Care</h1>
+
         <nav aria-label="Navegação principal">
             <a href="index.html">Início</a>
             <a href="profissionais.html">Profissionais</a>
@@ -20,20 +29,62 @@
     </header>
 
     <main>
+
         <section class="apresentacao">
+
             <h2>Cuidados de saúde mais perto de você</h2>
+
             <p>
                 Agende consultas e exames domiciliares
                 com profissionais de saúde.
             </p>
+
             <a class="botao" href="profissionais.html">
                 Buscar profissionais
             </a>
+
         </section>
+
+        <section class="teste-api">
+
+            <h2>Comunicação com o servidor</h2>
+
+            <p>
+                Teste a comunicação entre o site
+                e a API do Close Care.
+            </p>
+
+            <div class="acoes-api">
+
+                <button id="btn-conexao" type="button">
+                    Verificar conexão
+                </button>
+
+                <button id="btn-informacoes" type="button">
+                    Carregar informações
+                </button>
+
+            </div>
+
+            <p id="resultado-conexao"
+               class="resultado"
+               role="status"
+               aria-live="polite">
+                Aguardando verificação.
+            </p>
+
+            <div id="informacoes-sistema"
+                 class="informacoes-sistema"
+                 aria-live="polite">
+            </div>
+
+        </section>
+
     </main>
 
     <footer>
         <p>Close Care - Atendimento domiciliar</p>
     </footer>
+
 </body>
 </html>
