@@ -399,3 +399,135 @@ footer {
         width: 100%;
     }
 }
+
+
+.botao-horarios {
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.agendamento-container {
+    max-width: 750px;
+    margin: 30px auto;
+    padding: 35px;
+    background-color: white;
+    border: 1px solid #dce4e8;
+    border-radius: 12px;
+}
+
+.agendamento-container h2,
+.agendamento-container h3 {
+    color: #176b87;
+}
+
+.profissional-selecionado {
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #f5f8fa;
+    border-radius: 10px;
+}
+
+.profissional-selecionado h3 {
+    margin-top: 0;
+}
+
+.lista-horarios {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.horario-opcao {
+    padding: 15px 10px;
+    background-color: #eef5f8;
+    color: #176b87;
+    border: 2px solid #b8d3df;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.horario-opcao:hover {
+    background-color: #d5e9f1;
+}
+
+.horario-opcao[aria-pressed="true"] {
+    background-color: #176b87;
+    color: white;
+    border-color: #10516a;
+}
+
+.resumo-selecao {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #eef5f8;
+    border: 1px solid #a8cbd9;
+    border-radius: 10px;
+}
+
+.resumo-selecao h3 {
+    margin-top: 0;
+}
+
+.aviso-agendamento {
+    color: #52616b;
+    font-size: 14px;
+}
+
+.link-voltar {
+    display: inline-block;
+    margin-top: 25px;
+    color: #176b87;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .agendamento-container {
+        padding: 20px;
+        margin: 15px auto;
+    }
+
+    .lista-horarios {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+#btn-confirmar {
+    width: 100%;
+    margin-top: 15px;
+    background-color: #176b42;
+    color: white;
+    padding: 15px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+#btn-confirmar:hover {
+    background-color: #10532f;
+}
+
+#btn-confirmar:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#mensagem-confirmacao {
+    margin-top: 20px;
+}
+
+#link-minhas-consultas {
+    display: inline-block;
+    margin-top: 20px;
+    color: #176b87;
+    font-weight: bold;
+}
+
+#orientacao-login {
+    margin-top: 15px;
+}
+
+#link-minhas-consultas[hidden],
+#orientacao-login[hidden] {
+    display: none !important;
+}

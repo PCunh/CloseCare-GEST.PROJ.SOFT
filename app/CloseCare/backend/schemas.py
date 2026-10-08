@@ -1,6 +1,8 @@
 
 from typing import Literal
 
+from datetime import datetime
+
 from pydantic import (
     BaseModel,
     EmailStr,
@@ -87,3 +89,24 @@ class ProfissionalResumo(BaseModel):
     nome: str
     especialidade: str
     raio_atendimento_km: int
+
+class HorarioDisponivel(BaseModel):
+    id: int
+    profissional_id: int
+    inicio: datetime
+    fim: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class AgendamentoCriar(BaseModel):
+    horario_id: int = Field(gt=0)
+
+
+class AgendamentoResposta(BaseModel):
+    id: int
+    horario_id: int
+    profissional_id: int
+    tipo: str
+    status: str
+    inicio: datetime
+    fim: datetime

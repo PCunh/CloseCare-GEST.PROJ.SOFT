@@ -28,6 +28,7 @@ const mensagemFiltro = document.getElementById(
 );
 
 
+
 function criarCartaoProfissional(profissional) {
     const cartao = document.createElement("article");
     cartao.className = "card-profissional";
@@ -43,7 +44,19 @@ function criarCartaoProfissional(profissional) {
     raio.textContent =
         `Raio de atendimento: ${profissional.raio_atendimento_km} km`;
 
-    cartao.append(nome, especialidade, raio);
+    const linkHorarios = document.createElement("a");
+    linkHorarios.className = "botao botao-horarios";
+    linkHorarios.textContent = "Ver horários";
+
+    linkHorarios.href =
+        `agendamento.html?profissional_id=${profissional.id}`;
+
+    cartao.append(
+        nome,
+        especialidade,
+        raio,
+        linkHorarios
+    );
 
     return cartao;
 }

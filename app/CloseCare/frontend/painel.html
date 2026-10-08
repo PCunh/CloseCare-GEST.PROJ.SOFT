@@ -61,14 +61,23 @@
 
                 </div>
 
+                
                 <div id="area-paciente" hidden>
+
                     <h3>Área do paciente</h3>
 
-                    <p>
-                        Aqui você poderá consultar seus
-                        agendamentos e exames.
+                    <h4>Minhas consultas</h4>
+
+                    <p id="mensagem-consultas"
+                    role="status"
+                    aria-live="polite">
+                        Carregando consultas...
                     </p>
+
+                    <ul id="lista-consultas"></ul>
+
                 </div>
+
 
                 <div id="area-profissional" hidden>
                     <h3>Área do profissional</h3>

@@ -9,6 +9,13 @@ from database import get_db
 from models import Usuario, Profissional
 from schemas import ProfissionalResumo
 
+from datetime import date, datetime, time, timedelta
+from zoneinfo import ZoneInfo
+
+from fastapi import HTTPException
+
+from models import Horario, Agendamento
+from schemas import HorarioDisponivel
 
 router = APIRouter(
     prefix="/profissionais",
@@ -67,3 +74,64 @@ def listar_profissionais(
         }
         for profissional, usuario in resultados
     ]
+
+
+FUSO = ZoneInfo("America/Sao_Paulo")
+
+
+@router.get(
+    "/{profissional_id}/horarios",
+    response_model=list[HorarioDisponivel]
+)
+def listar_horarios_disponiveis(
+    profissional_id: int,
+    db: Annotated[Session, Depends(get_db)],
+    data: date | None = None
+):
+    profissional = db.get(Profissional, profissional_id)
+
+    if profissional is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Profissional não encontrado."
+        )
+
+    agora = datetime.now(FUSO)
+
+    reserva_ativa = (
+        select(Agendamento.id)
+        .where(
+            Agendamento.horario_id == Horario.id,
+            Agendamento.status.in_(
+                ["agendado", "realizado"]
+            )
+        )
+        .exists()
+    )
+
+    consulta = (
+        select(Horario)
+        .where(
+            Horario.profissional_id == profissional_id,
+            Horario.inicio >= agora,
+            ~reserva_ativa
+        )
+    )
+
+    if data is not None:
+        inicio_dia = datetime.combine(
+            data,
+            time.min,
+            tzinfo=FUSO
+        )
+
+        fim_dia = inicio_dia + timedelta(days=1)
+
+        consulta = consulta.where(
+            Horario.inicio >= inicio_dia,
+            Horario.inicio < fim_dia
+        )
+
+    consulta = consulta.order_by(Horario.inicio)
+
+    return db.scalars(consulta).all()

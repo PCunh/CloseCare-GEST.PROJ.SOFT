@@ -16,6 +16,54 @@ const mensagemPainel = document.getElementById(
 );
 
 
+async function carregarMeusAgendamentos() {
+    const lista = document.getElementById(
+        "lista-consultas"
+    );
+
+    const mensagem = document.getElementById(
+        "mensagem-consultas"
+    );
+
+    try {
+        const agendamentos = await buscarMeusAgendamentos();
+
+        lista.replaceChildren();
+
+        if (agendamentos.length === 0) {
+            mensagem.textContent =
+                "Você ainda não possui consultas agendadas.";
+            return;
+        }
+
+        mensagem.textContent =
+            `${agendamentos.length} registro(s) encontrado(s).`;
+
+        agendamentos.forEach(agendamento => {
+            const item = document.createElement("li");
+
+            const data = new Intl.DateTimeFormat("pt-BR", {
+                timeZone: "America/Sao_Paulo",
+                dateStyle: "short",
+                timeStyle: "short"
+            }).format(new Date(agendamento.inicio));
+
+            item.textContent =
+                `Consulta #${agendamento.id} — ` +
+                `${data} — ${agendamento.status}`;
+
+            lista.appendChild(item);
+        });
+
+    } catch (erro) {
+        mensagem.textContent =
+            "Não foi possível carregar suas consultas.";
+
+        console.error(erro);
+    }
+}
+
+
 async function carregarPerfil() {
 
     try {
@@ -39,7 +87,7 @@ async function carregarPerfil() {
         ).textContent = usuario.tipo_usuario;
 
         if (usuario.tipo_usuario === "paciente") {
-
+            carregarMeusAgendamentos();
             document.getElementById(
                 "area-paciente"
             ).hidden = false;

@@ -167,10 +167,14 @@ class Agendamento(Base):
             "status IN ('agendado', 'cancelado', 'realizado')",
             name="ck_status_agendamento"
         ),
+        
         Index(
-            "uq_horario_agendado",
+            "uq_horario_bloqueado",
             "horario_id",
             unique=True,
-            postgresql_where=text("status = 'agendado'")
-        ),
+            postgresql_where=text(
+                "status IN ('agendado', 'realizado')"
+            )
+        )
+    ,
     )

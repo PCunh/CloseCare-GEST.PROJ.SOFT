@@ -36,30 +36,24 @@ async function fazerRequisicao(
         conteudo = await resposta.json();
     } catch {}
 
-    if (!resposta.ok) {
+        if (!resposta.ok) {
+            let mensagem = "Erro na requisição.";
 
-        let mensagem = "Erro na requisição.";
+            if (typeof conteudo.detail === "string") {
+                mensagem = conteudo.detail;
+            } else if (Array.isArray(conteudo.detail)) {
+                mensagem = conteudo.detail
+                    .map(erro => erro.msg)
+                    .join("; ");
+            }
 
-        if (typeof conteudo.detail === "string") {
+            const erro = new Error(mensagem);
+            erro.status = resposta.status;
 
-            mensagem = conteudo.detail;
-
-        } else if (Array.isArray(conteudo.detail)) {
-
-            mensagem = conteudo.detail
-                .map(erro => erro.msg)
-                .join("; ");
-
-        } else if (resposta.status === 401) {
-
-            mensagem = "Usuário não autenticado.";
-
+            throw erro;
         }
 
-        throw new Error(mensagem);
-    }
-
-    return conteudo;
+        return conteudo;
 }
 
 
@@ -108,4 +102,34 @@ async function buscarProfissionais(especialidade = "") {
     }
 
     return fazerRequisicao(endpoint);
+}
+
+
+async function buscarHorariosProfissional(
+    profissionalId,
+    data = ""
+) {
+    let endpoint =
+        `/profissionais/${encodeURIComponent(profissionalId)}/horarios`;
+
+    if (data) {
+        endpoint += `?data=${encodeURIComponent(data)}`;
+    }
+
+    return fazerRequisicao(endpoint);
+}
+
+async function confirmarConsulta(horarioId) {
+    return fazerRequisicao(
+        "/agendamentos",
+        "POST",
+        {
+            horario_id: horarioId
+        }
+    );
+}
+
+
+async function buscarMeusAgendamentos() {
+    return fazerRequisicao("/agendamentos/meus");
 }

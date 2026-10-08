@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Selecionar horário - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/agendamento.js" defer></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html">Profissionais</a>
+            <a href="painel.html">Minha conta</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="agendamento-container">
+
+            <h2>Selecionar horário</h2>
+
+            <p id="estado-pagina"
+               role="status"
+               aria-live="polite">
+                Carregando profissional...
+            </p>
+
+            <div id="conteudo-agendamento" hidden>
+
+                <div class="profissional-selecionado">
+
+                    <h3 id="nome-profissional"></h3>
+
+                    <p id="especialidade-profissional"></p>
+
+                    <p id="raio-profissional"></p>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="data-agendamento">
+                        Data do atendimento
+                    </label>
+
+                    <input
+                        type="date"
+                        id="data-agendamento"
+                        required
+                    >
+
+                </div>
+
+                <h3>Horários disponíveis</h3>
+
+                <p id="mensagem-horarios"
+                   role="status"
+                   aria-live="polite">
+                </p>
+
+                <div
+                    id="lista-horarios"
+                    class="lista-horarios"
+                    role="group"
+                    aria-label="Horários disponíveis">
+                </div>
+
+                
+                <div id="resumo-selecao"
+                    class="resumo-selecao"
+                    hidden>
+
+                    <h3>Horário selecionado</h3>
+
+                    <p id="texto-selecao"></p>
+
+                    <p id="aviso-agendamento"
+                    class="aviso-agendamento">
+                        O horário ainda não foi reservado.
+                    </p>
+
+                    <button
+                        type="button"
+                        id="btn-confirmar"
+                        disabled>
+                        Confirmar consulta
+                    </button>
+
+                    <p id="mensagem-confirmacao"
+                    class="resultado"
+                    role="status"
+                    aria-live="polite"
+                    hidden>
+                    </p>
+
+                    <p id="orientacao-login" hidden>
+                        Para confirmar, faça
+                        <a href="login.html">login como paciente</a>.
+                    </p>
+
+                    <a id="link-minhas-consultas"
+                    href="painel.html"
+                    hidden>
+                        Ver minhas consultas
+                    </a>
+
+                </div>
+
+
+                <a href="profissionais.html"
+                   class="link-voltar">
+                    Voltar aos profissionais
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>
