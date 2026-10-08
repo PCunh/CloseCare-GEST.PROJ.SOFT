@@ -80,3 +80,10 @@ class LoginDados(BaseModel):
 class LoginResposta(BaseModel):
     mensagem: str
     usuario: UsuarioResposta
+
+    
+class ProfissionalResumo(BaseModel):
+    id: int
+    nome: str
+    especialidade: str
+    raio_atendimento_km: int

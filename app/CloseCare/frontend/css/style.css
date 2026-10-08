@@ -313,3 +313,89 @@ footer {
         padding: 20px;
     }
 }
+
+
+.pesquisa-container,
+.resultados-container {
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+.pesquisa-container {
+    padding: 30px;
+    background-color: white;
+    border: 1px solid #dce4e8;
+    border-radius: 12px;
+}
+
+.pesquisa-container h2 {
+    margin-top: 0;
+    color: #176b87;
+}
+
+.acoes-pesquisa {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+#btn-limpar {
+    background-color: #52616b;
+}
+
+#btn-limpar:hover {
+    background-color: #364550;
+}
+
+.resultados-container h2 {
+    color: #176b87;
+}
+
+#resultado-pesquisa {
+    margin-bottom: 20px;
+}
+
+.lista-profissionais {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.card-profissional {
+    padding: 25px;
+    background-color: white;
+    border: 1px solid #dce4e8;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-profissional h3 {
+    margin-top: 0;
+    color: #176b87;
+}
+
+.card-profissional p {
+    margin: 10px 0;
+}
+
+#mensagem-filtro {
+    color: #a61b1b;
+}
+
+@media (max-width: 700px) {
+    .lista-profissionais {
+        grid-template-columns: 1fr;
+    }
+
+    .pesquisa-container {
+        padding: 20px;
+    }
+
+    .acoes-pesquisa {
+        flex-direction: column;
+    }
+
+    .acoes-pesquisa button {
+        width: 100%;
+    }
+}

@@ -1,53 +1,91 @@
-from uuid import uuid4
+
+import secrets
 
 from pwdlib import PasswordHash
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from database import engine
-from models import Usuario, Paciente
-
-password_hash = PasswordHash.recommended()
+from models import Usuario, Profissional
 
 
-def testar_persistencia():
-    email_teste = f"teste_{uuid4().hex[:8]}@example.com"
+profissionais_teste = [
+    {
+        "nome": "Joao Profissional 1",
+        "email": "joao.enfermagem@example.com",
+        "especialidade": "Enfermagem",
+        "raio": 15
+    },
+    {
+        "nome": "Maria Profissional 2",
+        "email": "maria.fisioterapia@example.com",
+        "especialidade": "Fisioterapia",
+        "raio": 20
+    },
+    {
+        "nome": "Gustavo Profissional 3",
+        "email": "gustavo.psicologia@example.com",
+        "especialidade": "Psicologia",
+        "raio": 10
+    },
+    {
+        "nome": "Heitor Profissional 4",
+        "email": "heitor.nutricao@example.com",
+        "especialidade": "Nutrição",
+        "raio": 25
+    },
+    {
+        "nome": "Lucas Profissional 5",
+        "email": "lucas.enfermagem2@example.com",
+        "especialidade": "Enfermagem",
+        "raio": 30
+    }
+]
 
-    with Session(engine) as db:
-        usuario = Usuario(
-            nome="Paciente Teste",
-            email=email_teste,
-            senha_hash=password_hash.hash("SenhaFicticia123!"),
-            tipo_usuario="paciente"
-        )
 
-        db.add(usuario)
-        db.flush()
+def cadastrar_profissionais():
+    hash_senha = PasswordHash.recommended()
+    adicionados = 0
+    ignorados = 0
 
-        paciente = Paciente(
-            usuario_id=usuario.id,
-            telefone="00000000000",
-            endereco="Endereço fictício para teste"
-        )
+    with Session(engine) as db, db.begin():
 
-        db.add(paciente)
-        db.commit()
+        for dados in profissionais_teste:
 
-        usuario_id = usuario.id
-        print("Usuário gravado com ID:", usuario_id)
+            existente = db.scalar(
+                select(Usuario.id).where(
+                    Usuario.email == dados["email"]
+                )
+            )
 
-    with Session(engine) as db:
-        usuario_salvo = db.scalar(
-            select(Usuario).where(Usuario.id == usuario_id)
-        )
+            if existente is not None:
+                ignorados += 1
+                continue
 
-        assert usuario_salvo is not None
-        assert usuario_salvo.email == email_teste
+            usuario = Usuario(
+                nome=dados["nome"],
+                email=dados["email"],
+                senha_hash=hash_senha.hash(
+                    secrets.token_urlsafe(24)
+                ),
+                tipo_usuario="profissional"
+            )
 
-        print("Usuário encontrado:", usuario_salvo.nome)
-        print("E-mail:", usuario_salvo.email)
-        print("Persistência confirmada!")
+            db.add(usuario)
+            db.flush()
+
+            profissional = Profissional(
+                usuario_id=usuario.id,
+                especialidade=dados["especialidade"],
+                raio_atendimento_km=dados["raio"]
+            )
+
+            db.add(profissional)
+            adicionados += 1
+
+    print(f"Profissionais adicionados: {adicionados}")
+    print(f"Registros já existentes: {ignorados}")
 
 
 if __name__ == "__main__":
-    testar_persistencia()
+    cadastrar_profissionais()

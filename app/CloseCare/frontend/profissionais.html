@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profissionais - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/profissionais.js" defer></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html" aria-current="page">
+                Profissionais
+            </a>
+            <a href="login.html">Entrar</a>
+            <a href="cadastro.html">Cadastrar</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="pesquisa-container">
+
+            <h2>Encontre um profissional</h2>
+
+            <p>
+                Escolha uma especialidade para encontrar
+                profissionais de atendimento domiciliar.
+            </p>
+
+            <form id="form-pesquisa">
+
+                <div class="campo">
+
+                    <label for="especialidade">
+                        Especialidade
+                    </label>
+
+                    <select
+                        id="especialidade"
+                        name="especialidade"
+                    >
+                        <option value="">
+                            Todas as especialidades
+                        </option>
+                    </select>
+
+                </div>
+
+                <div class="acoes-pesquisa">
+
+                    <button
+                        type="submit"
+                        id="btn-pesquisar"
+                    >
+                        Pesquisar
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-limpar"
+                    >
+                        Limpar filtro
+                    </button>
+
+                </div>
+
+                <p
+                    id="mensagem-filtro"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
+            </form>
+
+        </section>
+
+        <section class="resultados-container"
+                 aria-labelledby="titulo-resultados">
+
+            <h2 id="titulo-resultados">
+                Profissionais encontrados
+            </h2>
+
+            <p
+                id="resultado-pesquisa"
+                role="status"
+                aria-live="polite"
+            >
+                Carregando profissionais...
+            </p>
+
+            <div id="lista-profissionais"
+                 class="lista-profissionais">
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>

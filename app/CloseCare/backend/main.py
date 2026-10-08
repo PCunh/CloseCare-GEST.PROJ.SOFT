@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import Usuario, Profissional, Horario, Agendamento
 
-from routers import usuarios, auth
+from routers import usuarios, auth, profissionais
 
 app = FastAPI(
     title="Close Care",
@@ -31,6 +31,7 @@ app.add_middleware(
 
 app.include_router(usuarios.router)
 app.include_router(auth.router)
+app.include_router(profissionais.router)
 
 @app.get("/")
 def inicio():

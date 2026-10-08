@@ -94,3 +94,18 @@ async function obterUsuarioAtual() {
 async function logoutUsuario() {
     return fazerRequisicao("/auth/logout", "POST");
 }
+
+async function buscarEspecialidades() {
+    return fazerRequisicao("/profissionais/especialidades");
+}
+
+
+async function buscarProfissionais(especialidade = "") {
+    let endpoint = "/profissionais";
+
+    if (especialidade) {
+        endpoint += `?especialidade=${encodeURIComponent(especialidade)}`;
+    }
+
+    return fazerRequisicao(endpoint);
+}
