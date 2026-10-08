@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Detalhes do Agendamento - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/detalhes-agendamento.js" defer></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html">Profissionais</a>
+            <a href="painel.html">Minha conta</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="detalhes-container">
+
+            <h2>Detalhes do agendamento</h2>
+
+            <p
+                id="mensagem-detalhes"
+                role="status"
+                aria-live="polite">
+                Carregando detalhes...
+            </p>
+
+            <div id="conteudo-detalhes" hidden>
+
+                <div class="detalhes-cabecalho">
+
+                    <div>
+                        <p>Protocolo</p>
+                        <h3 id="detalhe-protocolo"></h3>
+                    </div>
+
+                    <span
+                        id="detalhe-status"
+                        class="status-consulta">
+                    </span>
+
+                </div>
+
+                <dl class="detalhes-grid">
+
+                    <div>
+                        <dt>Profissional</dt>
+                        <dd id="detalhe-profissional"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Especialidade</dt>
+                        <dd id="detalhe-especialidade"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Data</dt>
+                        <dd id="detalhe-data"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Horário</dt>
+                        <dd id="detalhe-horario"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Tipo de atendimento</dt>
+                        <dd id="detalhe-tipo"></dd>
+                    </div>
+
+                    <div>
+                        <dt>Data do agendamento</dt>
+                        <dd id="detalhe-criacao"></dd>
+                    </div>
+
+                </dl>
+
+                <div id="area-cancelamento"
+                    class="area-cancelamento"
+                    hidden>
+
+                    <h3>Cancelar consulta</h3>
+
+                    <p>
+                        Caso não possa comparecer ao atendimento,
+                        você pode cancelar sua consulta.
+                    </p>
+
+                    <button
+                        type="button"
+                        id="btn-cancelar-consulta"
+                        class="btn-cancelar-consulta">
+                        Cancelar consulta
+                    </button>
+
+                </div>
+
+                <p
+                    id="mensagem-cancelamento"
+                    class="resultado"
+                    role="status"
+                    aria-live="polite"
+                    hidden>
+                </p>
+
+
+                <a
+                    href="painel.html"
+                    class="link-detalhes">
+                    Voltar às minhas consultas
+                </a>
+
+            </div>
+
+            <a
+                id="link-login-detalhes"
+                href="login.html"
+                hidden>
+                Fazer login
+            </a>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>

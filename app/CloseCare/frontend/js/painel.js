@@ -1,11 +1,7 @@
 
-const carregandoPerfil = document.getElementById(
-    "carregando-perfil"
-);
+const carregandoPerfil = document.getElementById("carregando-perfil");
 
-const conteudoPerfil = document.getElementById(
-    "conteudo-perfil"
-);
+const conteudoPerfil = document.getElementById("conteudo-perfil");
 
 const botaoSair = document.getElementById(
     "btn-sair"
@@ -14,7 +10,6 @@ const botaoSair = document.getElementById(
 const mensagemPainel = document.getElementById(
     "mensagem-painel"
 );
-
 
 async function carregarMeusAgendamentos() {
     const lista = document.getElementById(
@@ -25,34 +20,81 @@ async function carregarMeusAgendamentos() {
         "mensagem-consultas"
     );
 
+    lista.replaceChildren();
+
     try {
         const agendamentos = await buscarMeusAgendamentos();
 
-        lista.replaceChildren();
-
         if (agendamentos.length === 0) {
             mensagem.textContent =
-                "Você ainda não possui consultas agendadas.";
+                "Você ainda não possui consultas cadastradas.";
             return;
         }
 
         mensagem.textContent =
-            `${agendamentos.length} registro(s) encontrado(s).`;
+            `${agendamentos.length} consulta(s) encontrada(s).`;
+
+        const formatador = new Intl.DateTimeFormat("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            dateStyle: "short",
+            timeStyle: "short"
+        });
+
+        const statusTexto = {
+            agendado: "Agendado",
+            cancelado: "Cancelado",
+            realizado: "Realizado"
+        };
 
         agendamentos.forEach(agendamento => {
-            const item = document.createElement("li");
+            const cartao = document.createElement("article");
+            cartao.className = "cartao-consulta";
 
-            const data = new Intl.DateTimeFormat("pt-BR", {
-                timeZone: "America/Sao_Paulo",
-                dateStyle: "short",
-                timeStyle: "short"
-            }).format(new Date(agendamento.inicio));
+            const titulo = document.createElement("h4");
+            titulo.textContent =
+                agendamento.profissional_nome;
 
-            item.textContent =
-                `Consulta #${agendamento.id} — ` +
-                `${data} — ${agendamento.status}`;
+            const especialidade = document.createElement("p");
+            especialidade.textContent =
+                agendamento.especialidade;
 
-            lista.appendChild(item);
+            const data = document.createElement("p");
+            data.textContent =
+                `Data: ${formatador.format(
+                    new Date(agendamento.inicio)
+                )}`;
+
+            const status = document.createElement("span");
+            status.className = "status-consulta";
+
+            if (["agendado", "cancelado", "realizado"].includes(
+                agendamento.status
+            )) {
+                status.classList.add(
+                    `status-${agendamento.status}`
+                );
+            }
+
+            status.textContent =
+                statusTexto[agendamento.status] ||
+                agendamento.status;
+
+            const link = document.createElement("a");
+            link.className = "link-detalhes";
+            link.textContent = "Ver detalhes";
+
+            link.href =
+                `detalhes-agendamento.html?id=${agendamento.id}`;
+
+            cartao.append(
+                titulo,
+                especialidade,
+                data,
+                status,
+                link
+            );
+
+            lista.appendChild(cartao);
         });
 
     } catch (erro) {
@@ -62,7 +104,6 @@ async function carregarMeusAgendamentos() {
         console.error(erro);
     }
 }
-
 
 async function carregarPerfil() {
 

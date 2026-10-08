@@ -14,8 +14,21 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database import get_db
-from models import Usuario, Paciente, Horario, Agendamento
-from schemas import AgendamentoCriar, AgendamentoResposta
+
+from models import (
+    Usuario,
+    Paciente,
+    Profissional,
+    Horario,
+    Agendamento
+)
+
+from schemas import (
+    AgendamentoCriar,
+    AgendamentoResposta,
+    AgendamentoDetalhe
+)
+
 from security import obter_usuario_atual
 
 
@@ -161,10 +174,32 @@ def confirmar_agendamento(
         raise
 
 
+
+def montar_detalhe(
+    agendamento,
+    horario,
+    profissional,
+    usuario_profissional
+):
+    return {
+        "id": agendamento.id,
+        "horario_id": horario.id,
+        "profissional_id": profissional.id,
+        "profissional_nome": usuario_profissional.nome,
+        "especialidade": profissional.especialidade,
+        "tipo": agendamento.tipo,
+        "status": agendamento.status,
+        "inicio": horario.inicio,
+        "fim": horario.fim,
+        "criado_em": agendamento.criado_em
+    }
+
+
 @router.get(
     "/meus",
-    response_model=list[AgendamentoResposta]
+    response_model=list[AgendamentoDetalhe]
 )
+
 def listar_meus_agendamentos(
     db: Annotated[Session, Depends(get_db)],
     usuario: Annotated[
@@ -175,20 +210,195 @@ def listar_meus_agendamentos(
     paciente = obter_paciente(db, usuario)
 
     consulta = (
-        select(Agendamento, Horario)
+        select(
+            Agendamento,
+            Horario,
+            Profissional,
+            Usuario
+        )
         .join(
             Horario,
             Horario.id == Agendamento.horario_id
         )
+        .join(
+            Profissional,
+            Profissional.id == Horario.profissional_id
+        )
+        .join(
+            Usuario,
+            Usuario.id == Profissional.usuario_id
+        )
         .where(
             Agendamento.paciente_id == paciente.id
         )
-        .order_by(Horario.inicio)
+        .order_by(
+            Horario.inicio.desc(),
+            Agendamento.id.desc()
+        )
     )
 
     resultados = db.execute(consulta).all()
 
     return [
-        montar_resposta(agendamento, horario)
-        for agendamento, horario in resultados
+        montar_detalhe(
+            agendamento,
+            horario,
+            profissional,
+            usuario_profissional
+        )
+        for (
+            agendamento,
+            horario,
+            profissional,
+            usuario_profissional
+        ) in resultados
     ]
+
+
+@router.get(
+    "/{agendamento_id}",
+    response_model=AgendamentoDetalhe
+)
+def consultar_detalhes_agendamento(
+    agendamento_id: int,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    paciente = obter_paciente(db, usuario)
+
+    consulta = (
+        select(
+            Agendamento,
+            Horario,
+            Profissional,
+            Usuario
+        )
+        .join(
+            Horario,
+            Horario.id == Agendamento.horario_id
+        )
+        .join(
+            Profissional,
+            Profissional.id == Horario.profissional_id
+        )
+        .join(
+            Usuario,
+            Usuario.id == Profissional.usuario_id
+        )
+        .where(
+            Agendamento.id == agendamento_id,
+            Agendamento.paciente_id == paciente.id
+        )
+    )
+
+    resultado = db.execute(consulta).first()
+
+    if resultado is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Agendamento não encontrado."
+        )
+
+    return montar_detalhe(*resultado)
+
+
+@router.patch(
+    "/{agendamento_id}/cancelar",
+    response_model=AgendamentoResposta
+)
+def cancelar_agendamento(
+    agendamento_id: int,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    validar_origem(request)
+
+    paciente = obter_paciente(db, usuario)
+
+    try:
+        horario_id = db.scalar(
+            select(Agendamento.horario_id)
+            .where(
+                Agendamento.id == agendamento_id,
+                Agendamento.paciente_id == paciente.id
+            )
+        )
+
+        if horario_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Agendamento não encontrado."
+            )
+
+        horario = db.scalar(
+            select(Horario)
+            .where(Horario.id == horario_id)
+            .with_for_update()
+        )
+
+        if horario is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Horário não encontrado."
+            )
+
+        agendamento = db.scalar(
+            select(Agendamento)
+            .where(
+                Agendamento.id == agendamento_id,
+                Agendamento.paciente_id == paciente.id
+            )
+            .with_for_update()
+        )
+
+        if agendamento is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Agendamento não encontrado."
+            )
+
+        if agendamento.status == "cancelado":
+            raise HTTPException(
+                status_code=409,
+                detail="Esta consulta já foi cancelada."
+            )
+
+        if agendamento.status == "realizado":
+            raise HTTPException(
+                status_code=409,
+                detail="Consultas realizadas não podem ser canceladas."
+            )
+
+        if agendamento.status != "agendado":
+            raise HTTPException(
+                status_code=409,
+                detail="Esta consulta não pode ser cancelada."
+            )
+
+        if horario.inicio <= datetime.now(timezone.utc):
+            raise HTTPException(
+                status_code=409,
+                detail="Não é possível cancelar uma consulta que já começou."
+            )
+
+        agendamento.status = "cancelado"
+
+        resposta = montar_resposta(
+            agendamento,
+            horario
+        )
+
+        db.commit()
+
+        return resposta
+
+    except HTTPException:
+        db.rollback()
+        raise

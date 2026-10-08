@@ -531,3 +531,181 @@ footer {
 #orientacao-login[hidden] {
     display: none !important;
 }
+
+
+.lista-consultas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.cartao-consulta {
+    padding: 20px;
+    border: 1px solid #dce4e8;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+.cartao-consulta h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #176b87;
+}
+
+.cartao-consulta p {
+    margin: 8px 0;
+}
+
+.status-consulta {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 10px 0;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.status-agendado {
+    background-color: #e2f4e9;
+    color: #176b42;
+}
+
+.status-cancelado {
+    background-color: #fbe6e6;
+    color: #a61b1b;
+}
+
+.status-realizado {
+    background-color: #e1effb;
+    color: #155a94;
+}
+
+.link-detalhes,
+.link-nova-consulta {
+    display: inline-block;
+    margin-top: 12px;
+    color: #176b87;
+    font-weight: bold;
+}
+
+.cartao-consulta .link-detalhes {
+    display: block;
+}
+
+.detalhes-container {
+    max-width: 800px;
+    margin: 35px auto;
+    padding: 35px;
+    border: 1px solid #dce4e8;
+    border-radius: 12px;
+    background-color: white;
+}
+
+.detalhes-container h2 {
+    margin-top: 0;
+    color: #176b87;
+}
+
+.detalhes-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 20px;
+    margin: 25px 0;
+    border-radius: 10px;
+    background-color: #f5f8fa;
+}
+
+.detalhes-cabecalho p {
+    margin: 0;
+    color: #52616b;
+}
+
+.detalhes-cabecalho h3 {
+    margin: 5px 0 0;
+    font-size: 28px;
+    color: #176b87;
+}
+
+.detalhes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+    margin: 25px 0;
+}
+
+.detalhes-grid dt {
+    margin-bottom: 6px;
+    color: #52616b;
+    font-size: 14px;
+}
+
+.detalhes-grid dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+@media (max-width: 650px) {
+    .lista-consultas,
+    .detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detalhes-container {
+        margin: 15px auto;
+        padding: 20px;
+    }
+
+    .detalhes-cabecalho {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+.area-cancelamento {
+    margin-top: 30px;
+    padding: 22px;
+    border: 1px solid #edc5c5;
+    background-color: #fff8f8;
+    border-radius: 10px;
+}
+
+.area-cancelamento h3 {
+    margin-top: 0;
+    color: #a61b1b;
+}
+
+.btn-cancelar-consulta {
+    margin-top: 12px;
+    padding: 12px 20px;
+    background-color: #a61b1b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-cancelar-consulta:hover {
+    background-color: #841616;
+}
+
+.btn-cancelar-consulta:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#mensagem-cancelamento {
+    margin: 20px 0;
+}
+
+.resultado.sucesso {
+    color: #176b42;
+}
+
+.resultado.erro {
+    color: #a61b1b;
+}

@@ -110,3 +110,16 @@ class AgendamentoResposta(BaseModel):
     status: str
     inicio: datetime
     fim: datetime
+
+
+class AgendamentoDetalhe(BaseModel):
+    id: int
+    horario_id: int
+    profissional_id: int
+    profissional_nome: str
+    especialidade: str
+    tipo: str
+    status: str
+    inicio: datetime
+    fim: datetime
+    criado_em: datetime

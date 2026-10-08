@@ -133,3 +133,28 @@ async function confirmarConsulta(horarioId) {
 async function buscarMeusAgendamentos() {
     return fazerRequisicao("/agendamentos/meus");
 }
+
+
+async function buscarDetalhesAgendamento(agendamentoId) {
+    const id = Number(agendamentoId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw new Error("Identificador de agendamento inválido.");
+    }
+
+    return fazerRequisicao(`/agendamentos/${id}`);
+}
+
+
+async function cancelarAgendamento(agendamentoId) {
+    const id = Number(agendamentoId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw new Error("Identificador inválido.");
+    }
+
+    return fazerRequisicao(
+        `/agendamentos/${id}/cancelar`,
+        "PATCH"
+    );
+}
