@@ -1,21 +1,24 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request, status
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from database import get_db
 from models import Usuario, Profissional
 from schemas import ProfissionalResumo
 
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException
 
 from models import Horario, Agendamento
-from schemas import HorarioDisponivel
+from schemas import HorarioDisponivel, HorarioCriar, PerfilProfissionalAtualizar
+
+from security import obter_usuario_atual
 
 router = APIRouter(
     prefix="/profissionais",
@@ -135,3 +138,195 @@ def listar_horarios_disponiveis(
     consulta = consulta.order_by(Horario.inicio)
 
     return db.scalars(consulta).all()
+
+
+def verificar_origem_profissional(request: Request):
+    origem = request.headers.get("origin")
+
+    if origem is not None and origem not in {
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://localhost:8000"
+    }:
+        raise HTTPException(
+            status_code=403,
+            detail="Origem não autorizada."
+        )
+
+
+def obter_meu_perfil(
+    db: Session,
+    usuario: Usuario,
+    bloquear=False
+):
+    if usuario.tipo_usuario != "profissional":
+        raise HTTPException(
+            status_code=403,
+            detail="Apenas profissionais podem gerenciar a agenda."
+        )
+
+    consulta = select(Profissional).where(
+        Profissional.usuario_id == usuario.id
+    )
+
+    if bloquear:
+        consulta = consulta.with_for_update()
+
+    profissional = db.scalar(consulta)
+
+    if profissional is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Perfil profissional não encontrado."
+        )
+
+    return profissional
+
+
+def resposta_perfil(
+    profissional: Profissional,
+    usuario: Usuario
+):
+    return {
+        "id": profissional.id,
+        "nome": usuario.nome,
+        "especialidade": profissional.especialidade,
+        "raio_atendimento_km": profissional.raio_atendimento_km
+    }
+
+
+@router.get(
+    "/meu-perfil",
+    response_model=ProfissionalResumo
+)
+def consultar_meu_perfil(
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    profissional = obter_meu_perfil(db, usuario)
+
+    return resposta_perfil(profissional, usuario)
+
+
+@router.patch(
+    "/meu-perfil",
+    response_model=ProfissionalResumo
+)
+def atualizar_meu_perfil(
+    dados: PerfilProfissionalAtualizar,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    verificar_origem_profissional(request)
+
+    profissional = obter_meu_perfil(
+        db,
+        usuario,
+        bloquear=True
+    )
+
+    profissional.especialidade = dados.especialidade
+    profissional.raio_atendimento_km = (
+        dados.raio_atendimento_km
+    )
+
+    db.commit()
+
+    return resposta_perfil(profissional, usuario)
+
+
+@router.get(
+    "/meus-horarios",
+    response_model=list[HorarioDisponivel]
+)
+def listar_meus_horarios(
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    profissional = obter_meu_perfil(db, usuario)
+
+    consulta = (
+        select(Horario)
+        .where(
+            Horario.profissional_id == profissional.id
+        )
+        .order_by(Horario.inicio)
+    )
+
+    return db.scalars(consulta).all()
+
+
+@router.post(
+    "/meus-horarios",
+    response_model=HorarioDisponivel,
+    status_code=status.HTTP_201_CREATED
+)
+def cadastrar_horario(
+    dados: HorarioCriar,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    verificar_origem_profissional(request)
+
+    profissional = obter_meu_perfil(
+        db,
+        usuario,
+        bloquear=True
+    )
+
+    if dados.inicio <= datetime.now(timezone.utc):
+        raise HTTPException(
+            status_code=422,
+            detail="O horário deve começar no futuro."
+        )
+
+    sobreposicao = db.scalar(
+        select(Horario.id).where(
+            Horario.profissional_id == profissional.id,
+            Horario.inicio < dados.fim,
+            Horario.fim > dados.inicio
+        ).limit(1)
+    )
+
+    if sobreposicao is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="Já existe um horário cadastrado nesse período."
+        )
+
+    horario = Horario(
+        profissional_id=profissional.id,
+        inicio=dados.inicio,
+        fim=dados.fim
+    )
+
+    db.add(horario)
+
+    try:
+        db.commit()
+
+    except IntegrityError:
+        db.rollback()
+
+        raise HTTPException(
+            status_code=409,
+            detail="Horário já cadastrado."
+        )
+
+    db.refresh(horario)
+
+    return horario
