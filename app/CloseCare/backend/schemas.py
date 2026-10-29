@@ -172,3 +172,13 @@ class PerfilProfissionalAtualizar(BaseModel):
             )
 
         return valor
+
+
+class ConsultaRecebida(BaseModel):
+    id: int
+    horario_id: int
+    paciente_nome: str
+    tipo: str
+    status: str
+    inicio: datetime
+    fim: datetime

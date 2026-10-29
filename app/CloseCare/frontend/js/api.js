@@ -184,3 +184,10 @@ async function cadastrarMeuHorario(dados) {
         dados
     );
 }
+
+
+async function buscarConsultasRecebidas() {
+    return fazerRequisicao(
+        "/agendamentos/recebidos"
+    );
+}
