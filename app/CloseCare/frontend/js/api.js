@@ -158,3 +158,29 @@ async function cancelarAgendamento(agendamentoId) {
         "PATCH"
     );
 }
+
+async function buscarMeuPerfilProfissional() {
+    return fazerRequisicao("/profissionais/meu-perfil");
+}
+
+async function atualizarMeuPerfilProfissional(dados) {
+    return fazerRequisicao(
+        "/profissionais/meu-perfil",
+        "PATCH",
+        dados
+    );
+}
+
+async function buscarMeusHorarios() {
+    return fazerRequisicao(
+        "/profissionais/meus-horarios"
+    );
+}
+
+async function cadastrarMeuHorario(dados) {
+    return fazerRequisicao(
+        "/profissionais/meus-horarios",
+        "POST",
+        dados
+    );
+}

@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Agenda - Close Care</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js" defer></script>
+    <script src="js/agenda-profissional.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Close Care</h1>
+        <nav aria-label="Navegação principal">
+            <a href="index.html">Início</a>
+            <a href="profissionais.html">Profissionais</a>
+            <a href="painel.html">Minha conta</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="agenda-container">
+            <h2>Minha agenda profissional</h2>
+            <p id="mensagem-acesso-agenda" role="status" aria-live="polite">Verificando autenticação...</p>
+            <a id="link-login-agenda" href="login.html" hidden>Fazer login</a>
+
+            <div id="conteudo-agenda" hidden>
+                <p>Profissional: <strong id="agenda-profissional-nome"></strong></p>
+
+                <section class="agenda-bloco">
+                    <h3>Dados profissionais</h3>
+                    <form id="form-perfil-profissional">
+                        <div class="agenda-form-linha agenda-form-perfil">
+                            <div class="campo">
+                                <label for="agenda-especialidade">Especialidade</label>
+                                <input id="agenda-especialidade" type="text" minlength="2" maxlength="100" required>
+                            </div>
+                            <div class="campo">
+                                <label for="agenda-raio">Raio de atendimento (km)</label>
+                                <input id="agenda-raio" type="number" min="0" max="500" step="1" required>
+                            </div>
+                        </div>
+                        <button type="submit">Salvar dados</button>
+                    </form>
+                    <p id="mensagem-perfil-profissional" role="status" aria-live="polite" hidden></p>
+                </section>
+
+                <section class="agenda-bloco">
+                    <h3>Cadastrar horário</h3>
+                    <form id="form-novo-horario">
+                        <div class="agenda-form-linha">
+                            <div class="campo">
+                                <label for="agenda-data">Data</label>
+                                <input id="agenda-data" type="date" required>
+                            </div>
+                            <div class="campo">
+                                <label for="agenda-inicio">Início</label>
+                                <input id="agenda-inicio" type="time" required>
+                            </div>
+                            <div class="campo">
+                                <label for="agenda-fim">Término</label>
+                                <input id="agenda-fim" type="time" required>
+                            </div>
+                        </div>
+                        <p class="agenda-ajuda">Horários de Brasília (UTC-03:00). Cadastre um período por vez.</p>
+                        <button type="submit">Cadastrar horário</button>
+                    </form>
+                    <p id="mensagem-novo-horario" role="status" aria-live="polite" hidden></p>
+                </section>
+
+                <section class="agenda-bloco">
+                    <h3>Horários cadastrados</h3>
+                    <p id="mensagem-lista-agenda" role="status" aria-live="polite">Carregando horários...</p>
+                    <div id="lista-agenda" class="lista-agenda"></div>
+                </section>
+
+                <a href="painel.html" class="link-detalhes">Voltar ao painel</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+</body>
+</html>
