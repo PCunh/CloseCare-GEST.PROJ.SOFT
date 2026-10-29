@@ -8,8 +8,7 @@ from pydantic import (
     EmailStr,
     Field,
     ConfigDict,
-    field_validator,
-    model_validator
+    field_validator
 )
 class UsuarioCriar(BaseModel):
     nome: str = Field(min_length=3, max_length=150)
@@ -124,61 +123,3 @@ class AgendamentoDetalhe(BaseModel):
     inicio: datetime
     fim: datetime
     criado_em: datetime
-
-
-class HorarioCriar(BaseModel):
-    inicio: datetime
-    fim: datetime
-
-    @model_validator(mode="after")
-    def validar_periodo(self):
-        if (
-            self.inicio.tzinfo is None or
-            self.inicio.utcoffset() is None or
-            self.fim.tzinfo is None or
-            self.fim.utcoffset() is None
-        ):
-            raise ValueError(
-                "Informe início e fim com fuso horário."
-            )
-
-        if self.fim <= self.inicio:
-            raise ValueError(
-                "O fim deve ser posterior ao início."
-            )
-
-        return self
-
-
-class PerfilProfissionalAtualizar(BaseModel):
-    especialidade: str = Field(
-        min_length=2,
-        max_length=100
-    )
-
-    raio_atendimento_km: int = Field(
-        ge=0,
-        le=500
-    )
-
-    @field_validator("especialidade")
-    @classmethod
-    def validar_nome_especialidade(cls, valor):
-        valor = valor.strip()
-
-        if len(valor) < 2:
-            raise ValueError(
-                "Informe uma especialidade válida."
-            )
-
-        return valor
-
-
-class ConsultaRecebida(BaseModel):
-    id: int
-    horario_id: int
-    paciente_nome: str
-    tipo: str
-    status: str
-    inicio: datetime
-    fim: datetime

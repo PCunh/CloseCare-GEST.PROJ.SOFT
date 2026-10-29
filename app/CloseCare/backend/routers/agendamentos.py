@@ -26,8 +26,7 @@ from models import (
 from schemas import (
     AgendamentoCriar,
     AgendamentoResposta,
-    AgendamentoDetalhe,
-    ConsultaRecebida
+    AgendamentoDetalhe
 )
 
 from security import obter_usuario_atual
@@ -197,76 +196,6 @@ def montar_detalhe(
 
 
 @router.get(
-    "/recebidos",
-    response_model=list[ConsultaRecebida]
-)
-def listar_consultas_recebidas(
-    db: Annotated[Session, Depends(get_db)],
-    usuario: Annotated[
-        Usuario,
-        Depends(obter_usuario_atual)
-    ]
-):
-    if usuario.tipo_usuario != "profissional":
-        raise HTTPException(
-            status_code=403,
-            detail="Apenas profissionais podem consultar atendimentos recebidos."
-        )
-
-    profissional = db.scalar(
-        select(Profissional).where(
-            Profissional.usuario_id == usuario.id
-        )
-    )
-
-    if profissional is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Perfil profissional não encontrado."
-        )
-
-    consulta = (
-        select(Agendamento, Horario, Usuario)
-        .join(
-            Horario,
-            Horario.id == Agendamento.horario_id
-        )
-        .join(
-            Paciente,
-            Paciente.id == Agendamento.paciente_id
-        )
-        .join(
-            Usuario,
-            Usuario.id == Paciente.usuario_id
-        )
-        .where(
-            Horario.profissional_id == profissional.id,
-            Agendamento.tipo == "consulta"
-        )
-        .order_by(
-            Horario.inicio.asc(),
-            Agendamento.id.asc()
-        )
-    )
-
-    resultados = db.execute(consulta).all()
-
-    return [
-        {
-            "id": agendamento.id,
-            "horario_id": horario.id,
-            "paciente_nome": paciente_usuario.nome,
-            "tipo": agendamento.tipo,
-            "status": agendamento.status,
-            "inicio": horario.inicio,
-            "fim": horario.fim
-        }
-        for agendamento, horario, paciente_usuario
-        in resultados
-    ]
-
-
-@router.get(
     "/meus",
     response_model=list[AgendamentoDetalhe]
 )
@@ -300,12 +229,11 @@ def listar_meus_agendamentos(
             Usuario.id == Profissional.usuario_id
         )
         .where(
-            Agendamento.paciente_id == paciente.id,
-            Agendamento.tipo == "consulta"
+            Agendamento.paciente_id == paciente.id
         )
         .order_by(
-            Horario.inicio.asc(),
-            Agendamento.id.asc()
+            Horario.inicio.desc(),
+            Agendamento.id.desc()
         )
     )
 

@@ -105,117 +105,6 @@ async function carregarMeusAgendamentos() {
     }
 }
 
-
-async function carregarConsultasRecebidas() {
-    const lista = document.getElementById(
-        "lista-consultas-profissional"
-    );
-
-    const mensagem = document.getElementById(
-        "mensagem-consultas-profissional"
-    );
-
-    lista.replaceChildren();
-
-    try {
-        const consultas = await buscarConsultasRecebidas();
-
-        if (consultas.length === 0) {
-            mensagem.textContent =
-                "Você ainda não possui consultas recebidas.";
-            return;
-        }
-
-        mensagem.textContent =
-            `${consultas.length} consulta(s) encontrada(s).`;
-
-        const formatadorData = new Intl.DateTimeFormat(
-            "pt-BR",
-            {
-                timeZone: "America/Sao_Paulo",
-                dateStyle: "short",
-                timeStyle: "short"
-            }
-        );
-
-        const formatadorHora = new Intl.DateTimeFormat(
-            "pt-BR",
-            {
-                timeZone: "America/Sao_Paulo",
-                hour: "2-digit",
-                minute: "2-digit",
-                hourCycle: "h23"
-            }
-        );
-
-        const statusTexto = {
-            agendado: "Agendado",
-            cancelado: "Cancelado",
-            realizado: "Realizado"
-        };
-
-        consultas.forEach(consulta => {
-            const cartao = document.createElement("article");
-            cartao.className = "cartao-consulta";
-
-            const titulo = document.createElement("h4");
-            titulo.textContent = consulta.paciente_nome;
-
-            const protocolo = document.createElement("p");
-            protocolo.textContent =
-                `Consulta #${consulta.id}`;
-
-            const data = document.createElement("p");
-            data.textContent =
-                `Data: ${formatadorData.format(
-                    new Date(consulta.inicio)
-                )}`;
-
-            const horario = document.createElement("p");
-            horario.textContent =
-                `Horário: ${formatadorHora.format(
-                    new Date(consulta.inicio)
-                )} às ${formatadorHora.format(
-                    new Date(consulta.fim)
-                )}`;
-
-            const status = document.createElement("span");
-            status.className = "status-consulta";
-
-            if (
-                ["agendado", "cancelado", "realizado"].includes(
-                    consulta.status
-                )
-            ) {
-                status.classList.add(
-                    `status-${consulta.status}`
-                );
-            }
-
-            status.textContent =
-                statusTexto[consulta.status] ||
-                consulta.status;
-
-            cartao.append(
-                titulo,
-                protocolo,
-                data,
-                horario,
-                status
-            );
-
-            lista.appendChild(cartao);
-        });
-
-    } catch (erro) {
-        mensagem.textContent =
-            "Não foi possível carregar as consultas recebidas.";
-
-        console.error(erro);
-    }
-}
-
-
 async function carregarPerfil() {
 
     try {
@@ -244,7 +133,6 @@ async function carregarPerfil() {
                 "area-paciente"
             ).hidden = false;
 
-        
         } else if (
             usuario.tipo_usuario === "profissional"
         ) {
@@ -253,10 +141,7 @@ async function carregarPerfil() {
                 "area-profissional"
             ).hidden = false;
 
-            carregarConsultasRecebidas();
-
         }
-
 
         carregandoPerfil.hidden = true;
         conteudoPerfil.hidden = false;
