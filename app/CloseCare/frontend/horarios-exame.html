@@ -87,26 +87,64 @@
 
                 </section>
 
+                
                 <section
                     id="resumo-horario-exame"
                     class="resumo-horario-exame"
                     hidden>
 
-                    <h3>Horário selecionado</h3>
+                    <h3>Confirmar horário selecionado</h3>
 
                     <p id="texto-horario-exame"></p>
 
-                    <p class="aviso-exame">
-                        Sua seleção foi salva, mas o exame
-                        ainda não foi agendado.
+                    <p
+                        id="aviso-confirmacao-exame"
+                        class="aviso-exame">
+                        O horário ainda não foi reservado.
+                        Clique em Confirmar exame para concluir.
                     </p>
 
-                    <p class="aviso-exame">
-                        A confirmação será implementada
-                        nos próximos cartões.
+                    <div
+                        id="campo-observacoes-exame"
+                        class="campo">
+
+                        <label for="observacoes-exame">
+                            Observações (opcional)
+                        </label>
+
+                        <textarea
+                            id="observacoes-exame"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Informações adicionais sobre o atendimento">
+                        </textarea>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        id="btn-confirmar-exame"
+                        class="btn-confirmar-exame">
+                        Confirmar exame
+                    </button>
+
+                    <p
+                        id="mensagem-confirmacao-exame"
+                        class="resultado"
+                        role="status"
+                        aria-live="polite"
+                        hidden>
                     </p>
+
+                    <a
+                        id="link-login-exame"
+                        href="login.html"
+                        hidden>
+                        Fazer login para confirmar
+                    </a>
 
                 </section>
+
 
             </div>
 

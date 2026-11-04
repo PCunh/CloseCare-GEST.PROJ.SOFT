@@ -27,12 +27,38 @@ const textoHorarioExame = document.getElementById(
     "texto-horario-exame"
 );
 
+const botaoConfirmarExame = document.getElementById(
+    "btn-confirmar-exame"
+);
+
+const mensagemConfirmacaoExame = document.getElementById(
+    "mensagem-confirmacao-exame"
+);
+
+const linkLoginExame = document.getElementById(
+    "link-login-exame"
+);
+
+const avisoConfirmacaoExame = document.getElementById(
+    "aviso-confirmacao-exame"
+);
+
+const campoObservacoesExame = document.getElementById(
+    "campo-observacoes-exame"
+);
+
+const observacoesExame = document.getElementById(
+    "observacoes-exame"
+);
+
 const FUSO_EXAME = "America/Sao_Paulo";
 const CHAVE_EXAME = "closecare_exame_pendente";
 
 let selecaoExame = null;
 let horarioSelecionadoExame = null;
 let versaoConsultaExame = 0;
+let confirmandoExame = false;
+let exameConfirmado = false;
 
 
 function obterDataAtualExame() {
@@ -66,6 +92,18 @@ function formatarHoraExame(data) {
         minute: "2-digit",
         hourCycle: "h23"
     }).format(new Date(data));
+}
+
+
+function mostrarMensagemConfirmacaoExame(
+    mensagem,
+    tipo = ""
+) {
+    mensagemConfirmacaoExame.hidden = false;
+    mensagemConfirmacaoExame.className =
+        `resultado ${tipo}`.trim();
+
+    mensagemConfirmacaoExame.textContent = mensagem;
 }
 
 
@@ -114,7 +152,13 @@ function limparHorarioSelecionadoExame() {
     resumoHorarioExame.hidden = true;
     textoHorarioExame.textContent = "";
 
-    if (selecaoExame) {
+    botaoConfirmarExame.hidden = false;
+    botaoConfirmarExame.disabled = true;
+
+    mensagemConfirmacaoExame.hidden = true;
+    linkLoginExame.hidden = true;
+
+    if (selecaoExame && !exameConfirmado) {
         sessionStorage.setItem(
             CHAVE_EXAME,
             JSON.stringify(selecaoExame)
@@ -124,18 +168,28 @@ function limparHorarioSelecionadoExame() {
 
 
 function selecionarHorarioExame(horario) {
-    horarioSelecionadoExame = horario;
+    if (confirmandoExame || exameConfirmado) {
+        return;
+    }
 
-    const dados = {
-        ...selecaoExame,
-        horario_id: horario.id,
-        inicio: horario.inicio,
-        fim: horario.fim
-    };
+    if (
+        new Date(horario.inicio).getTime() <= Date.now()
+    ) {
+        mensagemHorariosExame.textContent =
+            "Este horário já passou. Escolha outro.";
+        return;
+    }
+
+    horarioSelecionadoExame = horario;
 
     sessionStorage.setItem(
         CHAVE_EXAME,
-        JSON.stringify(dados)
+        JSON.stringify({
+            ...selecaoExame,
+            horario_id: horario.id,
+            inicio: horario.inicio,
+            fim: horario.fim
+        })
     );
 
     textoHorarioExame.textContent =
@@ -143,7 +197,25 @@ function selecionarHorarioExame(horario) {
         `${formatarHoraExame(horario.inicio)} às ` +
         `${formatarHoraExame(horario.fim)}`;
 
+    avisoConfirmacaoExame.textContent =
+        "Clique em Confirmar exame para reservar o horário.";
+
+    botaoConfirmarExame.hidden = false;
+    botaoConfirmarExame.disabled = false;
+
+    mensagemConfirmacaoExame.hidden = true;
+    linkLoginExame.hidden = true;
+
     resumoHorarioExame.hidden = false;
+
+    listaHorariosExame.querySelectorAll("button").forEach(
+        botao => {
+            botao.setAttribute(
+                "aria-pressed",
+                String(Number(botao.dataset.horarioId) === horario.id)
+            );
+        }
+    );
 }
 
 
@@ -169,6 +241,7 @@ function renderizarHorariosExame(horarios) {
 
         botao.type = "button";
         botao.className = "botao-horario-exame";
+        botao.dataset.horarioId = String(horario.id);
 
         botao.textContent =
             `${formatarHoraExame(horario.inicio)} às ` +
@@ -178,15 +251,6 @@ function renderizarHorariosExame(horarios) {
 
         botao.addEventListener("click", () => {
             selecionarHorarioExame(horario);
-
-            listaHorariosExame.querySelectorAll(
-                "button"
-            ).forEach(item => {
-                item.setAttribute(
-                    "aria-pressed",
-                    String(item === botao)
-                );
-            });
         });
 
         listaHorariosExame.appendChild(botao);
@@ -195,15 +259,18 @@ function renderizarHorariosExame(horarios) {
 
 
 async function carregarHorariosExame() {
+    if (confirmandoExame || exameConfirmado) {
+        return;
+    }
+
     const versaoAtual = ++versaoConsultaExame;
 
     limparHorarioSelecionadoExame();
     listaHorariosExame.replaceChildren();
 
     const data = campoDataExame.value;
-    const hoje = obterDataAtualExame();
 
-    if (!data || data < hoje) {
+    if (!data || data < obterDataAtualExame()) {
         mensagemHorariosExame.textContent =
             "Selecione uma data válida, a partir de hoje.";
         return;
@@ -241,6 +308,127 @@ async function carregarHorariosExame() {
 }
 
 
+async function confirmarExameSelecionado() {
+    if (
+        !selecaoExame ||
+        !horarioSelecionadoExame ||
+        confirmandoExame ||
+        exameConfirmado
+    ) {
+        return;
+    }
+
+    if (
+        new Date(horarioSelecionadoExame.inicio).getTime()
+        <= Date.now()
+    ) {
+        await carregarHorariosExame();
+
+        mensagemHorariosExame.textContent =
+            "O horário escolhido já passou. Selecione outro.";
+        return;
+    }
+
+    confirmandoExame = true;
+    botaoConfirmarExame.disabled = true;
+    campoDataExame.disabled = true;
+    observacoesExame.disabled = true;
+    linkLoginExame.hidden = true;
+
+    listaHorariosExame.querySelectorAll("button").forEach(
+        botao => {
+            botao.disabled = true;
+        }
+    );
+
+    mostrarMensagemConfirmacaoExame(
+        "Confirmando agendamento..."
+    );
+
+    const exameId = selecaoExame.exame_id;
+    const horarioId = horarioSelecionadoExame.id;
+    const observacoes = observacoesExame.value.trim();
+
+    try {
+        const resposta = await confirmarAgendamentoExame(
+            exameId,
+            horarioId,
+            observacoes || null
+        );
+
+        exameConfirmado = true;
+
+        sessionStorage.removeItem(CHAVE_EXAME);
+
+        mostrarMensagemConfirmacaoExame(
+            `Exame confirmado com sucesso! Protocolo: #${resposta.id}.`,
+            "sucesso"
+        );
+
+        avisoConfirmacaoExame.textContent =
+            "Seu exame foi registrado. Guarde o número do protocolo.";
+
+        botaoConfirmarExame.hidden = true;
+        campoObservacoesExame.hidden = true;
+        linkLoginExame.hidden = true;
+
+        listaHorariosExame.replaceChildren();
+
+        mensagemHorariosExame.textContent =
+            "Agendamento concluído. Para agendar outro exame, volte à página de exames.";
+
+    } catch (erro) {
+        if (erro.status === 401) {
+            mostrarMensagemConfirmacaoExame(
+                "Faça login como paciente para confirmar o exame.",
+                "erro"
+            );
+
+            linkLoginExame.hidden = false;
+
+        } else if (erro.status === 403) {
+            mostrarMensagemConfirmacaoExame(
+                "Sua conta não tem permissão para agendar exames.",
+                "erro"
+            );
+
+        } else if (erro.status === 409) {
+            confirmandoExame = false;
+
+            await carregarHorariosExame();
+
+            mensagemHorariosExame.textContent =
+                "O horário não está mais disponível. Escolha outro.";
+
+        } else {
+            mostrarMensagemConfirmacaoExame(
+                erro.message,
+                "erro"
+            );
+        }
+
+        console.error("Erro ao confirmar exame:", erro);
+
+    } finally {
+        confirmandoExame = false;
+
+        if (!exameConfirmado) {
+            campoDataExame.disabled = false;
+            observacoesExame.disabled = false;
+
+            botaoConfirmarExame.disabled =
+                horarioSelecionadoExame === null;
+
+            listaHorariosExame.querySelectorAll("button").forEach(
+                botao => {
+                    botao.disabled = false;
+                }
+            );
+        }
+    }
+}
+
+
 function iniciarHorariosExame() {
     selecaoExame = recuperarSelecaoExame();
 
@@ -273,6 +461,11 @@ function iniciarHorariosExame() {
 campoDataExame.addEventListener(
     "change",
     carregarHorariosExame
+);
+
+botaoConfirmarExame.addEventListener(
+    "click",
+    confirmarExameSelecionado
 );
 
 

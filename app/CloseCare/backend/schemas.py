@@ -182,3 +182,25 @@ class ConsultaRecebida(BaseModel):
     status: str
     inicio: datetime
     fim: datetime
+
+
+class ExameAgendamentoCriar(BaseModel):
+    exame_id: int = Field(gt=0)
+    horario_id: int = Field(gt=0)
+    observacoes: str | None = Field(
+        default=None,
+        max_length=500
+    )
+
+
+class ExameAgendamentoResposta(BaseModel):
+    id: int
+    exame_agendado_id: int
+    exame_id: int
+    exame_nome: str
+    horario_id: int
+    profissional_id: int
+    tipo: str
+    status: str
+    inicio: datetime
+    fim: datetime

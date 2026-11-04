@@ -202,3 +202,20 @@ async function buscarProfissionaisExame(exameId) {
         `/exames/tipos/${encodeURIComponent(exameId)}/profissionais`
     );
 }
+
+
+async function confirmarAgendamentoExame(
+    exameId,
+    horarioId,
+    observacoes = null
+) {
+    return fazerRequisicao(
+        "/exames/agendamentos",
+        "POST",
+        {
+            exame_id: exameId,
+            horario_id: horarioId,
+            observacoes: observacoes
+        }
+    );
+}
