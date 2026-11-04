@@ -191,3 +191,14 @@ async function buscarConsultasRecebidas() {
         "/agendamentos/recebidos"
     );
 }
+
+
+async function buscarTiposExames() {
+    return fazerRequisicao("/exames/tipos");
+}
+
+async function buscarProfissionaisExame(exameId) {
+    return fazerRequisicao(
+        `/exames/tipos/${encodeURIComponent(exameId)}/profissionais`
+    );
+}

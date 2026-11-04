@@ -178,3 +178,72 @@ class Agendamento(Base):
         )
     ,
     )
+
+
+class TipoExame(Base):
+    __tablename__ = "tipos_exames"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True
+    )
+
+    nome: Mapped[str] = mapped_column(
+        String(150),
+        unique=True,
+        nullable=False
+    )
+
+    descricao: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True
+    )
+
+
+class ProfissionalExame(Base):
+    __tablename__ = "profissionais_exames"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True
+    )
+
+    profissional_id: Mapped[int] = mapped_column(
+        ForeignKey("profissionais.id"),
+        nullable=False
+    )
+
+    exame_id: Mapped[int] = mapped_column(
+        ForeignKey("tipos_exames.id"),
+        nullable=False
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "profissional_id",
+            "exame_id",
+            name="uq_profissional_exame"
+        ),
+    )
+
+
+class ExameAgendado(Base):
+    __tablename__ = "exames_agendados"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True
+    )
+
+    agendamento_id: Mapped[int] = mapped_column(
+        ForeignKey("agendamentos.id"),
+        unique=True,
+        nullable=False
+    )
+
+    exame_id: Mapped[int] = mapped_column(
+        ForeignKey("tipos_exames.id"),
+        nullable=False
+    )
+
+    observacoes: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True
+    )
