@@ -240,3 +240,48 @@ async function cancelarAgendamentoExame(agendamentoId) {
         "PATCH"
     );
 }
+
+async function remarcarConsulta(agendamentoId, novoHorarioId) {
+    const id = Number(agendamentoId);
+    const horarioId = Number(novoHorarioId);
+
+    if (
+        !Number.isSafeInteger(id) ||
+        id <= 0 ||
+        !Number.isSafeInteger(horarioId) ||
+        horarioId <= 0
+    ) {
+        throw new Error("Identificador inválido.");
+    }
+
+    return fazerRequisicao(
+        `/agendamentos/${id}/remarcar`,
+        "PATCH",
+        {
+            horario_id: horarioId
+        }
+    );
+}
+
+
+async function remarcarExame(agendamentoId, novoHorarioId) {
+    const id = Number(agendamentoId);
+    const horarioId = Number(novoHorarioId);
+
+    if (
+        !Number.isSafeInteger(id) ||
+        id <= 0 ||
+        !Number.isSafeInteger(horarioId) ||
+        horarioId <= 0
+    ) {
+        throw new Error("Identificador inválido.");
+    }
+
+    return fazerRequisicao(
+        `/exames/agendamentos/${id}/remarcar`,
+        "PATCH",
+        {
+            horario_id: horarioId
+        }
+    );
+}

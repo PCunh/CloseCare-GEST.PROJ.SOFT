@@ -19,7 +19,7 @@ from models import (
     Agendamento,
     ExameAgendado
 )
-from schemas import ProfissionalResumo, ExameAgendamentoCriar, ExameAgendamentoResposta, ExameListagem
+from schemas import ProfissionalResumo, ExameAgendamentoCriar, ExameAgendamentoResposta, ExameListagem, ExameRemarcar
 from security import obter_usuario_atual
 
 router = APIRouter(
@@ -283,6 +283,8 @@ def listar_meus_exames(
             TipoExame.nome.label("exame_nome"),
             usuario_paciente.nome.label("paciente_nome"),
             usuario_profissional.nome.label("profissional_nome"),
+            Horario.profissional_id.label("profissional_id"),
+            Horario.id.label("horario_id"),
             Horario.inicio,
             Horario.fim,
             Agendamento.status
@@ -501,6 +503,231 @@ def cancelar_agendamento_exame(
         db.commit()
 
         return resposta
+
+    except Exception:
+        db.rollback()
+        raise
+
+
+@router.patch(
+    "/agendamentos/{agendamento_id}/remarcar",
+    response_model=ExameAgendamentoResposta
+)
+def remarcar_agendamento_exame(
+    agendamento_id: int,
+    dados: ExameRemarcar,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    verificar_origem_exame(request)
+
+    if usuario.tipo_usuario not in ("paciente", "profissional"):
+        raise HTTPException(
+            status_code=403,
+            detail="Usuário não autorizado."
+        )
+
+    try:
+        horario_anterior_id = db.scalar(
+            select(Agendamento.horario_id).where(
+                Agendamento.id == agendamento_id,
+                Agendamento.tipo == "exame"
+            )
+        )
+
+        if horario_anterior_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Exame não encontrado."
+            )
+
+        if horario_anterior_id == dados.horario_id:
+            raise HTTPException(
+                status_code=409,
+                detail="Selecione um horário diferente."
+            )
+
+        horarios = db.scalars(
+            select(Horario)
+            .where(
+                Horario.id.in_([
+                    horario_anterior_id,
+                    dados.horario_id
+                ])
+            )
+            .order_by(Horario.id)
+            .with_for_update()
+        ).all()
+
+        horarios_por_id = {
+            horario.id: horario
+            for horario in horarios
+        }
+
+        horario_anterior = horarios_por_id.get(
+            horario_anterior_id
+        )
+
+        horario_novo = horarios_por_id.get(
+            dados.horario_id
+        )
+
+        if horario_anterior is None or horario_novo is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Horário não encontrado."
+            )
+
+        agendamento = db.scalar(
+            select(Agendamento)
+            .where(
+                Agendamento.id == agendamento_id,
+                Agendamento.tipo == "exame"
+            )
+            .with_for_update()
+        )
+
+        if agendamento is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Exame não encontrado."
+            )
+
+        if agendamento.horario_id != horario_anterior_id:
+            raise HTTPException(
+                status_code=409,
+                detail="O exame foi alterado. Atualize a página."
+            )
+
+        if usuario.tipo_usuario == "paciente":
+            autorizado = db.scalar(
+                select(Paciente.id).where(
+                    Paciente.id == agendamento.paciente_id,
+                    Paciente.usuario_id == usuario.id
+                )
+            )
+        else:
+            autorizado = db.scalar(
+                select(Profissional.id).where(
+                    Profissional.id == horario_anterior.profissional_id,
+                    Profissional.usuario_id == usuario.id
+                )
+            )
+
+        if autorizado is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Exame não encontrado."
+            )
+
+        if agendamento.status != "agendado":
+            raise HTTPException(
+                status_code=409,
+                detail="Somente exames agendados podem ser remarcados."
+            )
+
+        agora = datetime.now(timezone.utc)
+
+        if horario_anterior.inicio <= agora:
+            raise HTTPException(
+                status_code=409,
+                detail="O exame já começou."
+            )
+
+        if horario_novo.inicio <= agora:
+            raise HTTPException(
+                status_code=409,
+                detail="Selecione um horário futuro."
+            )
+
+        if horario_novo.profissional_id != horario_anterior.profissional_id:
+            raise HTTPException(
+                status_code=409,
+                detail="Selecione um horário do mesmo profissional."
+            )
+
+        exame_agendado = db.scalar(
+            select(ExameAgendado).where(
+                ExameAgendado.agendamento_id == agendamento.id
+            )
+        )
+
+        if exame_agendado is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Dados do exame não encontrados."
+            )
+
+        profissional_habilitado = db.scalar(
+            select(ProfissionalExame.id).where(
+                ProfissionalExame.profissional_id ==
+                    horario_novo.profissional_id,
+                ProfissionalExame.exame_id ==
+                    exame_agendado.exame_id
+            )
+        )
+
+        if profissional_habilitado is None:
+            raise HTTPException(
+                status_code=409,
+                detail="O profissional não está habilitado para esse exame."
+            )
+
+        reserva_existente = db.scalar(
+            select(Agendamento.id)
+            .where(
+                Agendamento.horario_id == horario_novo.id,
+                Agendamento.status.in_(["agendado", "realizado"])
+            )
+            .limit(1)
+        )
+
+        if reserva_existente is not None:
+            raise HTTPException(
+                status_code=409,
+                detail="O novo horário não está disponível."
+            )
+
+        exame = db.get(
+            TipoExame,
+            exame_agendado.exame_id
+        )
+
+        if exame is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Tipo de exame não encontrado."
+            )
+
+        agendamento.horario_id = horario_novo.id
+
+        resposta = {
+            "id": agendamento.id,
+            "exame_agendado_id": exame_agendado.id,
+            "exame_id": exame.id,
+            "exame_nome": exame.nome,
+            "horario_id": horario_novo.id,
+            "profissional_id": horario_novo.profissional_id,
+            "tipo": agendamento.tipo,
+            "status": agendamento.status,
+            "inicio": horario_novo.inicio,
+            "fim": horario_novo.fim
+        }
+
+        db.commit()
+
+        return resposta
+
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Não foi possível reservar o novo horário."
+        )
 
     except Exception:
         db.rollback()

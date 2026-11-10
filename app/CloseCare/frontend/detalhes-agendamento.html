@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css">
 
     <script src="js/api.js" defer></script>
+    <script src="js/header.js" defer></script>
     <script src="js/detalhes-agendamento.js" defer></script>
 </head>
 
@@ -21,11 +22,15 @@
     <header>
         <h1>Close Care</h1>
 
-        <nav aria-label="Navegação principal">
-            <a href="index.html">Início</a>
-            <a href="profissionais.html">Profissionais</a>
-            <a href="painel.html">Minha conta</a>
-        </nav>
+        <nav
+        aria-label="Navegação principal"
+        id="navegacao-principal">
+
+        <a href="index.html">Início</a>
+        <a href="profissionais.html">Profissionais</a>
+        <a href="exames.html">Exames</a>
+
+    </nav>
     </header>
 
     <main>
@@ -110,6 +115,56 @@
                     </button>
 
                 </div>
+
+                <section id="area-remarcacao" class="resumo-selecao" hidden>
+
+                <h3>Remarcar consulta</h3>
+
+                <p>
+                    Escolha outro horário disponível
+                    do mesmo profissional.
+                </p>
+
+                <label for="data-remarcacao">
+                    Nova data
+                </label>
+
+                <input
+                    type="date"
+                    id="data-remarcacao">
+
+                <p
+                    id="mensagem-horarios-remarcacao"
+                    role="status"
+                    aria-live="polite">
+                </p>
+
+                <div
+                    id="lista-horarios-remarcacao"
+                    class="lista-horarios">
+                </div>
+
+                <p
+                    id="resumo-remarcacao"
+                    hidden>
+                </p>
+
+                <button
+                    type="button"
+                    id="btn-confirmar-remarcacao"
+                    disabled>
+                    Confirmar remarcação
+                </button>
+
+            </section>
+
+            <p
+                id="mensagem-remarcacao"
+                class="resultado"
+                role="status"
+                aria-live="polite"
+                hidden>
+            </p>
 
                 <p
                     id="mensagem-cancelamento"

@@ -99,6 +99,11 @@ class HorarioDisponivel(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
+class AgendamentoRemarcar(BaseModel):
+    horario_id: int = Field(gt=0)
+
+
 class AgendamentoCriar(BaseModel):
     horario_id: int = Field(gt=0)
 
@@ -213,4 +218,11 @@ class ExameListagem(BaseModel):
     profissional_nome: str
     inicio: datetime
     fim: datetime
+    profissional_id: int
+    horario_id: int
+    inicio: datetime
+    fim: datetime
     status: str
+
+class ExameRemarcar(BaseModel):
+    horario_id: int = Field(gt=0)

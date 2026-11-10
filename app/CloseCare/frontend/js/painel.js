@@ -318,6 +318,228 @@ async function cancelarExamePeloPainel(
 }
 
 
+function criarAreaRemarcacaoExame(exame, tipoUsuario) {
+    const container = document.createElement("div");
+
+    const botaoAbrir = document.createElement("button");
+    botaoAbrir.type = "button";
+    botaoAbrir.textContent = "Remarcar exame";
+
+    const formulario = document.createElement("div");
+    formulario.hidden = true;
+
+    const titulo = document.createElement("h5");
+    titulo.textContent = "Escolher novo horário";
+
+    const campoData = document.createElement("input");
+    campoData.type = "date";
+
+    const partesData = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Sao_Paulo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }).formatToParts(new Date());
+
+    const valoresData = Object.fromEntries(
+        partesData.map(parte => [parte.type, parte.value])
+    );
+
+    const hoje =
+        `${valoresData.year}-${valoresData.month}-${valoresData.day}`;
+
+    campoData.min = hoje;
+    campoData.value = hoje;
+
+    const mensagem = document.createElement("p");
+    mensagem.setAttribute("role", "status");
+
+    const listaHorarios = document.createElement("div");
+    listaHorarios.className = "lista-horarios";
+
+    const botaoConfirmar = document.createElement("button");
+    botaoConfirmar.type = "button";
+    botaoConfirmar.textContent = "Confirmar remarcação";
+    botaoConfirmar.disabled = true;
+
+    let horarioSelecionado = null;
+    let versaoBusca = 0;
+    let enviando = false;
+
+    async function buscarHorarios() {
+        const versaoAtual = ++versaoBusca;
+
+        horarioSelecionado = null;
+        botaoConfirmar.disabled = true;
+        listaHorarios.replaceChildren();
+
+        if (!campoData.value || campoData.value < hoje) {
+            mensagem.textContent = "Escolha uma data válida.";
+            return;
+        }
+
+        mensagem.textContent = "Buscando horários...";
+
+        try {
+            const horarios = await buscarHorariosProfissional(
+                exame.profissional_id,
+                campoData.value
+            );
+
+            if (versaoAtual !== versaoBusca || formulario.hidden) {
+                return;
+            }
+
+            if (!Array.isArray(horarios)) {
+                throw new Error("Resposta de horários inválida.");
+            }
+
+            const disponiveis = horarios.filter(horario =>
+                horario.id !== exame.horario_id &&
+                new Date(horario.inicio).getTime() > Date.now()
+            );
+
+            if (disponiveis.length === 0) {
+                mensagem.textContent =
+                    "Nenhum horário disponível nesta data.";
+                return;
+            }
+
+            mensagem.textContent =
+                "Selecione um dos horários disponíveis:";
+
+            const formatadorHora = new Intl.DateTimeFormat(
+                "pt-BR",
+                {
+                    timeZone: "America/Sao_Paulo",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hourCycle: "h23"
+                }
+            );
+
+            disponiveis.forEach(horario => {
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+                botao.className = "horario-opcao";
+
+                botao.textContent =
+                    `${formatadorHora.format(new Date(horario.inicio))} às ` +
+                    `${formatadorHora.format(new Date(horario.fim))}`;
+
+                botao.setAttribute("aria-pressed", "false");
+
+                botao.addEventListener("click", () => {
+                    horarioSelecionado = horario;
+                    botaoConfirmar.disabled = false;
+
+                    listaHorarios.querySelectorAll("button").forEach(
+                        opcao => {
+                            opcao.setAttribute(
+                                "aria-pressed",
+                                String(opcao === botao)
+                            );
+                        }
+                    );
+                });
+
+                listaHorarios.appendChild(botao);
+            });
+
+        } catch (erro) {
+            if (versaoAtual === versaoBusca) {
+                mensagem.textContent = erro.message;
+            }
+        }
+    }
+
+    botaoAbrir.addEventListener("click", () => {
+        formulario.hidden = !formulario.hidden;
+
+        if (!formulario.hidden) {
+            buscarHorarios();
+        } else {
+            versaoBusca++;
+            horarioSelecionado = null;
+            botaoConfirmar.disabled = true;
+        }
+    });
+
+    campoData.addEventListener("change", buscarHorarios);
+
+    botaoConfirmar.addEventListener("click", async () => {
+        if (enviando || !horarioSelecionado) {
+            return;
+        }
+
+        const confirmado = window.confirm(
+            "Deseja remarcar este exame para o horário selecionado?"
+        );
+
+        if (!confirmado) {
+            return;
+        }
+
+        enviando = true;
+        campoData.disabled = true;
+        botaoAbrir.disabled = true;
+        botaoConfirmar.disabled = true;
+
+        listaHorarios.querySelectorAll("button").forEach(
+            botao => botao.disabled = true
+        );
+
+        try {
+            const resposta = await remarcarExame(
+                exame.id,
+                horarioSelecionado.id
+            );
+
+            await carregarMeusExames(tipoUsuario);
+
+            mensagemPainel.hidden = false;
+            mensagemPainel.className = "resultado sucesso";
+            mensagemPainel.textContent =
+                `Exame #${resposta.id} remarcado com sucesso.`;
+
+        } catch (erro) {
+            mensagem.textContent = erro.message;
+
+            if (erro.status === 409) {
+                await buscarHorarios();
+            }
+
+        } finally {
+            enviando = false;
+            campoData.disabled = false;
+            botaoAbrir.disabled = false;
+
+            listaHorarios.querySelectorAll("button").forEach(
+                botao => botao.disabled = false
+            );
+
+            botaoConfirmar.disabled = !horarioSelecionado;
+        }
+    });
+
+    formulario.append(
+        titulo,
+        campoData,
+        mensagem,
+        listaHorarios,
+        botaoConfirmar
+    );
+
+    container.append(
+        botaoAbrir,
+        formulario
+    );
+
+    return container;
+}
+
+
 async function carregarMeusExames(tipoUsuario) {
     const tipo = tipoUsuario === "profissional"
         ? "profissional"
@@ -450,9 +672,23 @@ async function carregarMeusExames(tipoUsuario) {
                     );
                 });
 
+                
+            if (
+                exame.status === "agendado" &&
+                new Date(exame.inicio).getTime() > Date.now()
+            ) {
+                const areaRemarcacao = criarAreaRemarcacaoExame(
+                    exame,
+                    tipo
+                );
+
+                cartao.appendChild(areaRemarcacao);
+            }
+
+
                 cartao.appendChild(botaoCancelar);
             }
-            
+
             lista.appendChild(cartao);
         });
 
