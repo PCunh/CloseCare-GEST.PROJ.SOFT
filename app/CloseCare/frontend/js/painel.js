@@ -106,6 +106,46 @@ async function carregarMeusAgendamentos() {
 }
 
 
+async function cancelarConsultaComoProfissional(
+    consultaId,
+    botao
+) {
+    const confirmado = window.confirm(
+        "Deseja realmente cancelar esta consulta?"
+    );
+
+    if (!confirmado) {
+        return;
+    }
+
+    botao.disabled = true;
+
+    try {
+        await cancelarAgendamento(consultaId);
+
+        await carregarConsultasRecebidas();
+
+        mensagemPainel.hidden = false;
+        mensagemPainel.className = "resultado sucesso";
+        mensagemPainel.textContent =
+            `Consulta #${consultaId} cancelada com sucesso. O horário foi liberado.`;
+
+    } catch (erro) {
+        mensagemPainel.hidden = false;
+        mensagemPainel.className = "resultado erro";
+        mensagemPainel.textContent =
+            `Não foi possível cancelar a consulta: ${erro.message}`;
+
+        if (erro.status === 409) {
+            await carregarConsultasRecebidas();
+        } else {
+            botao.disabled = false;
+        }
+
+        console.error(erro);
+    }
+}
+
 async function carregarConsultasRecebidas() {
     const lista = document.getElementById(
         "lista-consultas-profissional"
@@ -204,12 +244,221 @@ async function carregarConsultasRecebidas() {
                 status
             );
 
+            if (
+                consulta.status === "agendado" &&
+                new Date(consulta.inicio).getTime() > Date.now()
+            ) {
+                const botaoCancelar = document.createElement("button");
+
+                botaoCancelar.type = "button";
+                botaoCancelar.className = "btn-cancelar-consulta";
+                botaoCancelar.textContent = "Cancelar consulta";
+
+                botaoCancelar.addEventListener("click", () => {
+                    cancelarConsultaComoProfissional(
+                        consulta.id,
+                        botaoCancelar
+                    );
+                });
+
+                cartao.appendChild(botaoCancelar);
+            }
+
             lista.appendChild(cartao);
         });
 
     } catch (erro) {
         mensagem.textContent =
             "Não foi possível carregar as consultas recebidas.";
+
+        console.error(erro);
+    }
+}
+
+
+async function cancelarExamePeloPainel(
+    agendamentoId,
+    tipoUsuario,
+    botao
+) {
+    const confirmado = window.confirm(
+        "Deseja realmente cancelar este exame?"
+    );
+
+    if (!confirmado) {
+        return;
+    }
+
+    botao.disabled = true;
+
+    try {
+        await cancelarAgendamentoExame(agendamentoId);
+
+        await carregarMeusExames(tipoUsuario);
+
+        mensagemPainel.hidden = false;
+        mensagemPainel.className = "resultado sucesso";
+        mensagemPainel.textContent =
+            `Exame #${agendamentoId} cancelado com sucesso. O horário foi liberado.`;
+
+    } catch (erro) {
+        if (erro.status === 409 || erro.status === 404) {
+            await carregarMeusExames(tipoUsuario);
+        } else {
+            botao.disabled = false;
+        }
+
+        mensagemPainel.hidden = false;
+        mensagemPainel.className = "resultado erro";
+        mensagemPainel.textContent =
+            `Não foi possível cancelar o exame: ${erro.message}`;
+
+        console.error(erro);
+    }
+}
+
+
+async function carregarMeusExames(tipoUsuario) {
+    const tipo = tipoUsuario === "profissional"
+        ? "profissional"
+        : "paciente";
+
+    const lista = document.getElementById(
+        `lista-exames-${tipo}`
+    );
+
+    const mensagem = document.getElementById(
+        `mensagem-exames-${tipo}`
+    );
+
+    lista.replaceChildren();
+
+    try {
+        const exames = await buscarMeusExames();
+
+        if (!Array.isArray(exames)) {
+            throw new Error("Resposta inválida.");
+        }
+
+        if (exames.length === 0) {
+            mensagem.textContent =
+                tipo === "paciente"
+                    ? "Você ainda não possui exames cadastrados."
+                    : "Você ainda não possui exames recebidos.";
+            return;
+        }
+
+        mensagem.textContent =
+            `${exames.length} exame(s) encontrado(s).`;
+
+        const formatadorData = new Intl.DateTimeFormat(
+            "pt-BR",
+            {
+                timeZone: "America/Sao_Paulo",
+                dateStyle: "short",
+                timeStyle: "short"
+            }
+        );
+
+        const formatadorHora = new Intl.DateTimeFormat(
+            "pt-BR",
+            {
+                timeZone: "America/Sao_Paulo",
+                hour: "2-digit",
+                minute: "2-digit",
+                hourCycle: "h23"
+            }
+        );
+
+        const statusTexto = {
+            agendado: "Agendado",
+            cancelado: "Cancelado",
+            realizado: "Realizado"
+        };
+
+        exames.forEach(exame => {
+            const cartao = document.createElement("article");
+            cartao.className = "cartao-consulta";
+
+            const titulo = document.createElement("h4");
+            titulo.textContent = exame.exame_nome;
+
+            const protocolo = document.createElement("p");
+            protocolo.textContent =
+                `Protocolo: #${exame.id}`;
+
+            const pessoa = document.createElement("p");
+
+            if (tipo === "paciente") {
+                pessoa.textContent =
+                    `Profissional: ${exame.profissional_nome}`;
+            } else {
+                pessoa.textContent =
+                    `Paciente: ${exame.paciente_nome}`;
+            }
+
+            const horario = document.createElement("p");
+
+            horario.textContent =
+                `Data e horário: ${formatadorData.format(
+                    new Date(exame.inicio)
+                )} às ${formatadorHora.format(
+                    new Date(exame.fim)
+                )}`;
+
+            const status = document.createElement("span");
+            status.className = "status-consulta";
+
+            if (
+                ["agendado", "cancelado", "realizado"].includes(
+                    exame.status
+                )
+            ) {
+                status.classList.add(
+                    `status-${exame.status}`
+                );
+            }
+
+            status.textContent =
+                statusTexto[exame.status] ||
+                exame.status;
+
+            cartao.append(
+                titulo,
+                protocolo,
+                pessoa,
+                horario,
+                status
+            );
+
+            
+            if (
+                exame.status === "agendado" &&
+                new Date(exame.inicio).getTime() > Date.now()
+            ) {
+                const botaoCancelar = document.createElement("button");
+
+                botaoCancelar.type = "button";
+                botaoCancelar.className = "btn-cancelar-consulta";
+                botaoCancelar.textContent = "Cancelar exame";
+
+                botaoCancelar.addEventListener("click", () => {
+                    cancelarExamePeloPainel(
+                        exame.id,
+                        tipo,
+                        botaoCancelar
+                    );
+                });
+
+                cartao.appendChild(botaoCancelar);
+            }
+            
+            lista.appendChild(cartao);
+        });
+
+    } catch (erro) {
+        mensagem.textContent =
+            "Não foi possível carregar os exames.";
 
         console.error(erro);
     }
@@ -238,24 +487,25 @@ async function carregarPerfil() {
             "perfil-tipo"
         ).textContent = usuario.tipo_usuario;
 
+        
         if (usuario.tipo_usuario === "paciente") {
             carregarMeusAgendamentos();
+            carregarMeusExames("paciente");
+
             document.getElementById(
                 "area-paciente"
             ).hidden = false;
-
-        
-        } else if (
+        }else if (
             usuario.tipo_usuario === "profissional"
         ) {
+            carregarConsultasRecebidas();
+            carregarMeusExames("profissional");
 
             document.getElementById(
                 "area-profissional"
             ).hidden = false;
-
-            carregarConsultasRecebidas();
-
         }
+
 
 
         carregandoPerfil.hidden = true;

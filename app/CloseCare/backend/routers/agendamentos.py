@@ -41,6 +41,7 @@ router = APIRouter(
 
 ORIGENS_PERMITIDAS = {
     "http://localhost:5500",
+    "http://127.0.0.1:5500",
     "http://localhost:8000"
 }
 
@@ -392,21 +393,28 @@ def cancelar_agendamento(
 ):
     validar_origem(request)
 
-    paciente = obter_paciente(db, usuario)
+    if usuario.tipo_usuario not in (
+        "paciente",
+        "profissional"
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Usuário não autorizado a cancelar consultas."
+        )
 
     try:
         horario_id = db.scalar(
             select(Agendamento.horario_id)
             .where(
                 Agendamento.id == agendamento_id,
-                Agendamento.paciente_id == paciente.id
+                Agendamento.tipo == "consulta"
             )
         )
 
         if horario_id is None:
             raise HTTPException(
                 status_code=404,
-                detail="Agendamento não encontrado."
+                detail="Consulta não encontrada."
             )
 
         horario = db.scalar(
@@ -425,7 +433,7 @@ def cancelar_agendamento(
             select(Agendamento)
             .where(
                 Agendamento.id == agendamento_id,
-                Agendamento.paciente_id == paciente.id
+                Agendamento.tipo == "consulta"
             )
             .with_for_update()
         )
@@ -433,7 +441,31 @@ def cancelar_agendamento(
         if agendamento is None:
             raise HTTPException(
                 status_code=404,
-                detail="Agendamento não encontrado."
+                detail="Consulta não encontrada."
+            )
+
+        if usuario.tipo_usuario == "paciente":
+            autorizado = db.scalar(
+                select(Paciente.id)
+                .where(
+                    Paciente.id == agendamento.paciente_id,
+                    Paciente.usuario_id == usuario.id
+                )
+            )
+
+        else:
+            autorizado = db.scalar(
+                select(Profissional.id)
+                .where(
+                    Profissional.id == horario.profissional_id,
+                    Profissional.usuario_id == usuario.id
+                )
+            )
+
+        if autorizado is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Consulta não encontrada."
             )
 
         if agendamento.status == "cancelado":
@@ -471,6 +503,6 @@ def cancelar_agendamento(
 
         return resposta
 
-    except HTTPException:
+    except Exception:
         db.rollback()
         raise

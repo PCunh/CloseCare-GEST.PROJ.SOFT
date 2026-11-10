@@ -204,6 +204,13 @@ async function buscarProfissionaisExame(exameId) {
 }
 
 
+async function buscarMeusExames() {
+    return fazerRequisicao(
+        "/exames/agendamentos/meus"
+    );
+}
+
+
 async function confirmarAgendamentoExame(
     exameId,
     horarioId,
@@ -217,5 +224,19 @@ async function confirmarAgendamentoExame(
             horario_id: horarioId,
             observacoes: observacoes
         }
+    );
+}
+
+
+async function cancelarAgendamentoExame(agendamentoId) {
+    const id = Number(agendamentoId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw new Error("Identificador de exame inválido.");
+    }
+
+    return fazerRequisicao(
+        `/exames/agendamentos/${id}/cancelar`,
+        "PATCH"
     );
 }

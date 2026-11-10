@@ -204,3 +204,13 @@ class ExameAgendamentoResposta(BaseModel):
     status: str
     inicio: datetime
     fim: datetime
+
+
+class ExameListagem(BaseModel):
+    id: int
+    exame_nome: str
+    paciente_nome: str
+    profissional_nome: str
+    inicio: datetime
+    fim: datetime
+    status: str
