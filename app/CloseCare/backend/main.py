@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import Usuario, Profissional, Horario, Agendamento
 
-from routers import usuarios, auth, profissionais, agendamentos
+from routers import usuarios, auth, profissionais, agendamentos, exames
 app = FastAPI(
     title="Close Care",
     description="Sistema de atendimento domiciliar Close Care",
@@ -32,6 +32,7 @@ app.include_router(usuarios.router)
 app.include_router(auth.router)
 app.include_router(profissionais.router)
 app.include_router(agendamentos.router)
+app.include_router(exames.router)
 
 @app.get("/")
 def inicio():

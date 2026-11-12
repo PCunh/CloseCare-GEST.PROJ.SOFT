@@ -26,7 +26,9 @@ from models import (
 from schemas import (
     AgendamentoCriar,
     AgendamentoResposta,
-    AgendamentoDetalhe
+    AgendamentoDetalhe,
+    AgendamentoRemarcar,
+    ConsultaRecebida
 )
 
 from security import obter_usuario_atual
@@ -40,6 +42,7 @@ router = APIRouter(
 
 ORIGENS_PERMITIDAS = {
     "http://localhost:5500",
+    "http://127.0.0.1:5500",
     "http://localhost:8000"
 }
 
@@ -196,6 +199,76 @@ def montar_detalhe(
 
 
 @router.get(
+    "/recebidos",
+    response_model=list[ConsultaRecebida]
+)
+def listar_consultas_recebidas(
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[
+        Usuario,
+        Depends(obter_usuario_atual)
+    ]
+):
+    if usuario.tipo_usuario != "profissional":
+        raise HTTPException(
+            status_code=403,
+            detail="Apenas profissionais podem consultar atendimentos recebidos."
+        )
+
+    profissional = db.scalar(
+        select(Profissional).where(
+            Profissional.usuario_id == usuario.id
+        )
+    )
+
+    if profissional is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Perfil profissional não encontrado."
+        )
+
+    consulta = (
+        select(Agendamento, Horario, Usuario)
+        .join(
+            Horario,
+            Horario.id == Agendamento.horario_id
+        )
+        .join(
+            Paciente,
+            Paciente.id == Agendamento.paciente_id
+        )
+        .join(
+            Usuario,
+            Usuario.id == Paciente.usuario_id
+        )
+        .where(
+            Horario.profissional_id == profissional.id,
+            Agendamento.tipo == "consulta"
+        )
+        .order_by(
+            Horario.inicio.asc(),
+            Agendamento.id.asc()
+        )
+    )
+
+    resultados = db.execute(consulta).all()
+
+    return [
+        {
+            "id": agendamento.id,
+            "horario_id": horario.id,
+            "paciente_nome": paciente_usuario.nome,
+            "tipo": agendamento.tipo,
+            "status": agendamento.status,
+            "inicio": horario.inicio,
+            "fim": horario.fim
+        }
+        for agendamento, horario, paciente_usuario
+        in resultados
+    ]
+
+
+@router.get(
     "/meus",
     response_model=list[AgendamentoDetalhe]
 )
@@ -229,11 +302,12 @@ def listar_meus_agendamentos(
             Usuario.id == Profissional.usuario_id
         )
         .where(
-            Agendamento.paciente_id == paciente.id
+            Agendamento.paciente_id == paciente.id,
+            Agendamento.tipo == "consulta"
         )
         .order_by(
-            Horario.inicio.desc(),
-            Agendamento.id.desc()
+            Horario.inicio.asc(),
+            Agendamento.id.asc()
         )
     )
 
@@ -320,21 +394,28 @@ def cancelar_agendamento(
 ):
     validar_origem(request)
 
-    paciente = obter_paciente(db, usuario)
+    if usuario.tipo_usuario not in (
+        "paciente",
+        "profissional"
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Usuário não autorizado a cancelar consultas."
+        )
 
     try:
         horario_id = db.scalar(
             select(Agendamento.horario_id)
             .where(
                 Agendamento.id == agendamento_id,
-                Agendamento.paciente_id == paciente.id
+                Agendamento.tipo == "consulta"
             )
         )
 
         if horario_id is None:
             raise HTTPException(
                 status_code=404,
-                detail="Agendamento não encontrado."
+                detail="Consulta não encontrada."
             )
 
         horario = db.scalar(
@@ -353,7 +434,7 @@ def cancelar_agendamento(
             select(Agendamento)
             .where(
                 Agendamento.id == agendamento_id,
-                Agendamento.paciente_id == paciente.id
+                Agendamento.tipo == "consulta"
             )
             .with_for_update()
         )
@@ -361,7 +442,31 @@ def cancelar_agendamento(
         if agendamento is None:
             raise HTTPException(
                 status_code=404,
-                detail="Agendamento não encontrado."
+                detail="Consulta não encontrada."
+            )
+
+        if usuario.tipo_usuario == "paciente":
+            autorizado = db.scalar(
+                select(Paciente.id)
+                .where(
+                    Paciente.id == agendamento.paciente_id,
+                    Paciente.usuario_id == usuario.id
+                )
+            )
+
+        else:
+            autorizado = db.scalar(
+                select(Profissional.id)
+                .where(
+                    Profissional.id == horario.profissional_id,
+                    Profissional.usuario_id == usuario.id
+                )
+            )
+
+        if autorizado is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Consulta não encontrada."
             )
 
         if agendamento.status == "cancelado":
@@ -399,6 +504,154 @@ def cancelar_agendamento(
 
         return resposta
 
-    except HTTPException:
+    except Exception:
+        db.rollback()
+        raise
+
+
+@router.patch(
+    "/{agendamento_id}/remarcar",
+    response_model=AgendamentoResposta
+)
+def remarcar_agendamento(
+    agendamento_id: int,
+    dados: AgendamentoRemarcar,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: Annotated[Usuario, Depends(obter_usuario_atual)]
+):
+    validar_origem(request)
+    paciente = obter_paciente(db, usuario)
+
+    try:
+        horario_anterior_id = db.scalar(
+            select(Agendamento.horario_id).where(
+                Agendamento.id == agendamento_id,
+                Agendamento.paciente_id == paciente.id,
+                Agendamento.tipo == "consulta"
+            )
+        )
+
+        if horario_anterior_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Consulta não encontrada."
+            )
+
+        if horario_anterior_id == dados.horario_id:
+            raise HTTPException(
+                status_code=409,
+                detail="Selecione um horário diferente do atual."
+            )
+
+        horarios = db.scalars(
+            select(Horario)
+            .where(Horario.id.in_([
+                horario_anterior_id,
+                dados.horario_id
+            ]))
+            .order_by(Horario.id)
+            .with_for_update()
+        ).all()
+
+        horarios_por_id = {
+            horario.id: horario for horario in horarios
+        }
+
+        horario_anterior = horarios_por_id.get(
+            horario_anterior_id
+        )
+        horario_novo = horarios_por_id.get(
+            dados.horario_id
+        )
+
+        if horario_anterior is None or horario_novo is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Horário não encontrado."
+            )
+
+        agendamento = db.scalar(
+            select(Agendamento)
+            .where(
+                Agendamento.id == agendamento_id,
+                Agendamento.paciente_id == paciente.id,
+                Agendamento.tipo == "consulta"
+            )
+            .with_for_update()
+        )
+
+        if agendamento is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Consulta não encontrada."
+            )
+
+        if agendamento.horario_id != horario_anterior_id:
+            raise HTTPException(
+                status_code=409,
+                detail="A consulta foi alterada. Atualize a página."
+            )
+
+        if agendamento.status != "agendado":
+            raise HTTPException(
+                status_code=409,
+                detail="Somente consultas agendadas podem ser remarcadas."
+            )
+
+        agora = datetime.now(timezone.utc)
+
+        if horario_anterior.inicio <= agora:
+            raise HTTPException(
+                status_code=409,
+                detail="Não é possível remarcar uma consulta que já começou."
+            )
+
+        if horario_novo.inicio <= agora:
+            raise HTTPException(
+                status_code=409,
+                detail="Escolha um horário futuro."
+            )
+
+        if horario_novo.profissional_id != horario_anterior.profissional_id:
+            raise HTTPException(
+                status_code=409,
+                detail="Escolha um horário do mesmo profissional."
+            )
+
+        reserva_existente = db.scalar(
+            select(Agendamento.id)
+            .where(
+                Agendamento.horario_id == horario_novo.id,
+                Agendamento.status.in_(["agendado", "realizado"])
+            )
+            .limit(1)
+        )
+
+        if reserva_existente is not None:
+            raise HTTPException(
+                status_code=409,
+                detail="O novo horário não está mais disponível."
+            )
+
+        agendamento.horario_id = horario_novo.id
+
+        resposta = montar_resposta(
+            agendamento,
+            horario_novo
+        )
+
+        db.commit()
+
+        return resposta
+
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="O novo horário não está mais disponível."
+        )
+
+    except Exception:
         db.rollback()
         raise

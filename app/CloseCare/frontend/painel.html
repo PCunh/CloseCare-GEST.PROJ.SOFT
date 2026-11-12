@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css">
 
     <script src="js/api.js" defer></script>
+    <script src="js/header.js" defer></script>
     <script src="js/painel.js" defer></script>
 </head>
 
@@ -21,11 +22,15 @@
     <header>
         <h1>Close Care</h1>
 
-        <nav aria-label="Navegação principal">
-            <a href="index.html">Início</a>
-            <a href="profissionais.html">Profissionais</a>
-            <a href="painel.html">Minha conta</a>
-        </nav>
+        <nav
+        aria-label="Navegação principal"
+        id="navegacao-principal">
+
+        <a href="index.html">Início</a>
+        <a href="profissionais.html">Profissionais</a>
+        <a href="exames.html">Exames</a>
+
+    </nav>
     </header>
 
     <main>
@@ -79,20 +84,91 @@
                         class="lista-consultas">
                     </div>
 
+
+                    <section class="secao-exames">
+
+                        <h4>Meus exames</h4>
+
+                        <p
+                            id="mensagem-exames-paciente"
+                            role="status"
+                            aria-live="polite">
+                            Carregando exames...
+                        </p>
+
+                        <div
+                            id="lista-exames-paciente"
+                            class="lista-consultas">
+                        </div>
+
+                        <a
+                            href="exames.html"
+                            class="link-nova-consulta">
+                            Agendar novo exame
+                        </a>
+
+                    </section>
+
+
                     <a href="profissionais.html"
                     class="link-nova-consulta">
                         Agendar nova consulta
                     </a>
 
                 </div>
-
+                
                 <div id="area-profissional" hidden>
                     <h3>Área do profissional</h3>
 
                     <p>
-                        Aqui você poderá gerenciar seus
-                        horários e atendimentos.
+                        Gerencie seus dados profissionais e
+                        disponibilize horários para seus pacientes.
                     </p>
+
+                    <a
+                        href="agenda-profissional.html"
+                        class="botao">
+                        Gerenciar minha agenda
+                    </a>
+
+                    
+                    <section class="consultas-profissional">
+
+                        <h4>Consultas recebidas</h4>
+
+                        <p
+                            id="mensagem-consultas-profissional"
+                            role="status"
+                            aria-live="polite">
+                            Carregando consultas...
+                        </p>
+
+                        <div
+                            id="lista-consultas-profissional"
+                            class="lista-consultas">
+                        </div>
+
+                    </section>
+
+                    <section class="secao-exames">
+
+                        <h4>Exames recebidos</h4>
+
+                        <p
+                            id="mensagem-exames-profissional"
+                            role="status"
+                            aria-live="polite">
+                            Carregando exames...
+                        </p>
+
+                        <div
+                            id="lista-exames-profissional"
+                            class="lista-consultas">
+                        </div>
+
+                    </section>
+
+
                 </div>
 
                 <button id="btn-sair" type="button">

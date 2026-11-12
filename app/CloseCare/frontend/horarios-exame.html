@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Horários do Exame - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/header.js" defer></script>
+    <script src="js/horarios-exame.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Close Care</h1>
+
+        <nav
+        aria-label="Navegação principal"
+        id="navegacao-principal">
+
+        <a href="index.html">Início</a>
+        <a href="profissionais.html">Profissionais</a>
+        <a href="exames.html">Exames</a>
+
+    </nav>
+    </header>
+
+    <main>
+        <section class="horarios-exame-container">
+
+            <h2>Escolher data e horário do exame</h2>
+
+            <p
+                id="estado-horarios-exame"
+                role="status"
+                aria-live="polite">
+                Carregando informações...
+            </p>
+
+            <div id="conteudo-horarios-exame" hidden>
+
+                <section class="resumo-dados-exame">
+                    <h3>Exame selecionado</h3>
+
+                    <p>
+                        <strong>Exame:</strong>
+                        <span id="nome-tipo-exame"></span>
+                    </p>
+
+                    <p>
+                        <strong>Profissional:</strong>
+                        <span id="nome-profissional-exame"></span>
+                    </p>
+
+                    <a href="exames.html">
+                        Escolher outro profissional
+                    </a>
+                </section>
+
+                <section class="selecao-data-exame">
+
+                    <h3>Selecione a data</h3>
+
+                    <label for="data-horarios-exame">
+                        Data do atendimento
+                    </label>
+
+                    <input
+                        type="date"
+                        id="data-horarios-exame"
+                        required>
+
+                    <h3>Horários disponíveis</h3>
+
+                    <p
+                        id="mensagem-horarios-exame"
+                        role="status"
+                        aria-live="polite">
+                        Buscando horários...
+                    </p>
+
+                    <div
+                        id="lista-horarios-exame"
+                        class="lista-horarios-exame">
+                    </div>
+
+                </section>
+
+                
+                <section
+                    id="resumo-horario-exame"
+                    class="resumo-horario-exame"
+                    hidden>
+
+                    <h3>Confirmar horário selecionado</h3>
+
+                    <p id="texto-horario-exame"></p>
+
+                    <p
+                        id="aviso-confirmacao-exame"
+                        class="aviso-exame">
+                        O horário ainda não foi reservado.
+                        Clique em Confirmar exame para concluir.
+                    </p>
+
+                    <div
+                        id="campo-observacoes-exame"
+                        class="campo">
+
+                        <label for="observacoes-exame">
+                            Observações (opcional)
+                        </label>
+
+                        <textarea
+                            id="observacoes-exame"
+                            rows="3"
+                            maxlength="500"
+                            placeholder="Informações adicionais sobre o atendimento">
+                        </textarea>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        id="btn-confirmar-exame"
+                        class="btn-confirmar-exame">
+                        Confirmar exame
+                    </button>
+
+                    <p
+                        id="mensagem-confirmacao-exame"
+                        class="resultado"
+                        role="status"
+                        aria-live="polite"
+                        hidden>
+                    </p>
+
+                    <a
+                        id="link-login-exame"
+                        href="login.html"
+                        hidden>
+                        Fazer login para confirmar
+                    </a>
+
+                </section>
+
+
+            </div>
+
+            <a href="exames.html" class="link-voltar">
+                Voltar aos exames
+            </a>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+</body>
+</html>

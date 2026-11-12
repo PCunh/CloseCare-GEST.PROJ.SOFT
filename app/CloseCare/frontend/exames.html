@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Agendar Exame - Close Care</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/header.js" defer></script>
+    <script src="js/exames.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <h1>Close Care</h1>
+
+        <nav
+        aria-label="Navegação principal"
+        id="navegacao-principal">
+
+        <a href="index.html">Início</a>
+        <a href="profissionais.html">Profissionais</a>
+        <a href="exames.html">Exames</a>
+
+    </nav>
+    </header>
+
+    <main>
+        <section class="pesquisa-container">
+
+            <h2>Agendar exame domiciliar</h2>
+
+            <p>
+                Selecione o tipo de exame para encontrar
+                profissionais que oferecem esse atendimento.
+            </p>
+
+            <form id="form-pesquisa-exame">
+                <div class="campo">
+                    <label for="tipo-exame">
+                        Tipo de exame
+                    </label>
+
+                    <select id="tipo-exame" required>
+                        <option value="">
+                            Selecione um exame
+                        </option>
+                    </select>
+                </div>
+
+                <button
+                    id="btn-pesquisar-exame"
+                    type="submit">
+                    Buscar profissionais
+                </button>
+            </form>
+
+            <p
+                id="mensagem-tipos-exame"
+                role="status"
+                aria-live="polite">
+                Carregando exames...
+            </p>
+
+        </section>
+
+        <section class="resultados-container">
+
+            <h2>Profissionais disponíveis</h2>
+
+            <p
+                id="mensagem-profissionais-exame"
+                role="status"
+                aria-live="polite">
+                Escolha um exame para continuar.
+            </p>
+
+            <div
+                id="lista-profissionais-exame"
+                class="lista-profissionais">
+            </div>
+
+        </section>
+
+        <section
+            id="resumo-exame"
+            class="resumo-exame"
+            hidden>
+
+            <h2>Profissional selecionado</h2>
+
+            <p id="texto-resumo-exame"></p>
+
+            <a
+                href="horarios-exame.html"
+                class="botao">
+                Escolher data e horário
+            </a>
+
+
+        </section>
+    </main>
+
+    <footer>
+        <p>Close Care - Atendimento domiciliar</p>
+    </footer>
+
+</body>
+</html>

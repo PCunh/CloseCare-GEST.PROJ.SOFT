@@ -158,3 +158,130 @@ async function cancelarAgendamento(agendamentoId) {
         "PATCH"
     );
 }
+
+async function buscarMeuPerfilProfissional() {
+    return fazerRequisicao("/profissionais/meu-perfil");
+}
+
+async function atualizarMeuPerfilProfissional(dados) {
+    return fazerRequisicao(
+        "/profissionais/meu-perfil",
+        "PATCH",
+        dados
+    );
+}
+
+async function buscarMeusHorarios() {
+    return fazerRequisicao(
+        "/profissionais/meus-horarios"
+    );
+}
+
+async function cadastrarMeuHorario(dados) {
+    return fazerRequisicao(
+        "/profissionais/meus-horarios",
+        "POST",
+        dados
+    );
+}
+
+
+async function buscarConsultasRecebidas() {
+    return fazerRequisicao(
+        "/agendamentos/recebidos"
+    );
+}
+
+
+async function buscarTiposExames() {
+    return fazerRequisicao("/exames/tipos");
+}
+
+async function buscarProfissionaisExame(exameId) {
+    return fazerRequisicao(
+        `/exames/tipos/${encodeURIComponent(exameId)}/profissionais`
+    );
+}
+
+
+async function buscarMeusExames() {
+    return fazerRequisicao(
+        "/exames/agendamentos/meus"
+    );
+}
+
+
+async function confirmarAgendamentoExame(
+    exameId,
+    horarioId,
+    observacoes = null
+) {
+    return fazerRequisicao(
+        "/exames/agendamentos",
+        "POST",
+        {
+            exame_id: exameId,
+            horario_id: horarioId,
+            observacoes: observacoes
+        }
+    );
+}
+
+
+async function cancelarAgendamentoExame(agendamentoId) {
+    const id = Number(agendamentoId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw new Error("Identificador de exame inválido.");
+    }
+
+    return fazerRequisicao(
+        `/exames/agendamentos/${id}/cancelar`,
+        "PATCH"
+    );
+}
+
+async function remarcarConsulta(agendamentoId, novoHorarioId) {
+    const id = Number(agendamentoId);
+    const horarioId = Number(novoHorarioId);
+
+    if (
+        !Number.isSafeInteger(id) ||
+        id <= 0 ||
+        !Number.isSafeInteger(horarioId) ||
+        horarioId <= 0
+    ) {
+        throw new Error("Identificador inválido.");
+    }
+
+    return fazerRequisicao(
+        `/agendamentos/${id}/remarcar`,
+        "PATCH",
+        {
+            horario_id: horarioId
+        }
+    );
+}
+
+
+async function remarcarExame(agendamentoId, novoHorarioId) {
+    const id = Number(agendamentoId);
+    const horarioId = Number(novoHorarioId);
+
+    if (
+        !Number.isSafeInteger(id) ||
+        id <= 0 ||
+        !Number.isSafeInteger(horarioId) ||
+        horarioId <= 0
+    ) {
+        throw new Error("Identificador inválido.");
+    }
+
+    return fazerRequisicao(
+        `/exames/agendamentos/${id}/remarcar`,
+        "PATCH",
+        {
+            horario_id: horarioId
+        }
+    );
+}
